@@ -31,12 +31,12 @@ def carregar_personagens():
         {"nome": "Dr. Robotnik", "jogo": "Sonic the Hedgehog", "papel": "Vilão", "caracteristica": "Máquinas Geniais"}
     ]
 
-# --- BARRA LATERAL ESQUERDA (COM POKÉBOLAS) ---
+# --- BARRA LATERAL ESQUERDA (COM POKÉBOLAS ESPECIAIS) ---
 with st.sidebar:
-    st.title("🔴 Kabulops Games")
+    st.title("⚫ Kabulops Games") # Representando a Luxury Ball (Preta/Ouro)
     st.markdown("---")
-    st.write("### 🔴 Participe da Pesquisa")
-    st.info("🔴 Torne-se um Kabuloso, inscreva-se no canal!")
+    st.write("### 🔮 Participe da Pesquisa") # Representando a Master Ball (Roxa)
+    st.info("🟡 Torne-se um Kabuloso, inscreva-se no canal!") # Representando a Ultra Ball (Amarela)
 
 # --- CONTEÚDO PRINCIPAL ---
 st.title("🎮 CANAL KABULOPS GAMES")
