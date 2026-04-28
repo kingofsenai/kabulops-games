@@ -3,19 +3,31 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# --- INICIALIZAÇÃO DO SISTEMA DE MÉTRICAS (Session State) ---
+# --- INICIALIZAÇÃO DE MÉTRICAS (Memória da Sessão) ---
 if 'total_players' not in st.session_state:
     st.session_state.total_players = 0
 if 'votos_acumulados' not in st.session_state:
     st.session_state.votos_acumulados = {}
 
-# Banco de Dados de Personagens
+# --- BANCO DE DADOS COMPLETO (Recuperado e Expandido) ---
 def carregar_personagens():
     return [
-        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type"},
-        {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas"},
-        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade"},
-        {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Equilíbrio"}
+        # --- POKÉMON YELLOW ---
+        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
+        {"nome": "Charizard", "jogo": "Pokémon Yellow", "papel": "Atacante", "caracteristica": "Fire/Flying - Lança-chamas"},
+        {"nome": "Blastoise", "jogo": "Pokémon Yellow", "papel": "Defensor", "caracteristica": "Water Type - Hydro Pump"},
+        {"nome": "Venusaur", "jogo": "Pokémon Yellow", "papel": "Suporte", "caracteristica": "Grass/Poison - Solar Beam"},
+        {"nome": "Mewtwo", "jogo": "Pokémon Yellow", "papel": "Lendário", "caracteristica": "Psychic Type - Psychic"},
+        {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas de Corte"},
+        # --- MARIO BROS ---
+        {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Equilíbrio"},
+        {"nome": "Luigi", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Salto Alto"},
+        {"nome": "Bowser", "jogo": "Super Mario Bros", "papel": "Vilão", "caracteristica": "Força Bruta"},
+        {"nome": "Yoshi", "jogo": "Super Mario Bros", "papel": "Montaria", "caracteristica": "Língua Extensível"},
+        # --- SONIC ---
+        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade Ultra"},
+        {"nome": "Tails", "jogo": "Sonic the Hedgehog", "papel": "Piloto", "caracteristica": "Voo Duplo"},
+        {"nome": "Knuckles", "jogo": "Sonic the Hedgehog", "papel": "Guardião", "caracteristica": "Planar e Escalar"}
     ]
 
 # URLs das Imagens
@@ -24,68 +36,87 @@ url_master = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/i
 url_ultra  = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
 url_logo   = "https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png"
 
-# --- BARRA LATERAL ---
+# --- BARRA LATERAL ANTERIOR + MÉTRICAS ---
 with st.sidebar:
-    # Painel de Identidade
+    # Pokébola 1
     c1, c2 = st.columns([1, 2])
-    with c1: st.image(url_luxury, width=70)
+    with c1: st.image(url_luxury, width=75)
     with c2: st.markdown("### **Kabulops Games**")
+    st.markdown("---")
+    
+    # Pokébola 2
+    c3, c4 = st.columns([1, 2])
+    with c3: st.image(url_master, width=75)
+    with c4: st.markdown("### **Participe da Pesquisa**")
+    st.markdown("---")
+    
+    # Pokébola 3
+    c5, c6 = st.columns([1, 2])
+    with c5: st.image(url_ultra, width=75)
+    with c6: st.markdown("#### **Torne-se um Kabuloso!**")
     
     st.markdown("---")
     
-    # --- NOVO BOX DE RESULTADOS PARCIAIS ---
-    st.subheader("📊 Estatísticas da Live")
-    st.metric(label="Players que acessaram", value=st.session_state.total_players)
+    # Seção de Métricas (Integrada discretamente)
+    st.subheader("📊 Estatísticas")
+    st.metric(label="Players Ativos", value=st.session_state.total_players)
     
     if st.session_state.votos_acumulados:
-        # Pega o jogo mais votado
         mais_votado = max(st.session_state.votos_acumulados, key=st.session_state.votos_acumulados.get)
-        qtd_votos = st.session_state.votos_acumulados[mais_votado]
-        st.write(f"**Líder da Enquete:**")
-        st.success(f"{mais_votado} ({qtd_votos} votos)")
+        st.write(f"**Líder:** {mais_votado}")
     else:
-        st.info("Nenhum voto registrado ainda.")
+        st.caption("Aguardando primeiro voto...")
 
-    st.markdown("---")
-    st.write("🔴 **Torne-se um Kabuloso!**")
-
-# --- CONTEÚDO PRINCIPAL ---
+# --- CONTEÚDO PRINCIPAL (LOGO NO TOPO) ---
 col_esq, col_logo, col_dir = st.columns([1, 3, 1])
 with col_logo:
-    st.image(url_logo, use_container_width=True)
+    try:
+        st.image(url_logo, use_container_width=True)
+    except:
+        st.title("🎮 KABULOPS RETRO GAMING")
 
 st.markdown("---")
 
-# Login do Player
+# Sistema de Login/Entrada
 if 'player_logado' not in st.session_state:
-    nome_input = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
-    if st.button("Entrar no Game"):
+    nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
+    if st.button("PRESS START"):
         if nome_input:
             st.session_state.player_logado = nome_input
-            st.session_state.total_players += 1 # Conta novo acesso
+            st.session_state.total_players += 1
             st.rerun()
 else:
-    st.write(f"### Seja bem-vindo, **{st.session_state.player_logado}**!")
+    st.write(f"### Bem-vindo ao Canal, **{st.session_state.player_logado}**!")
     
     # Enquete
     st.header("📊 Enquete de Live")
-    opcoes = ["Pokémon Yellow", "Sonic 2", "Super Mario World", "Castlevania"]
-    escolha = st.selectbox("Qual game merece live hoje?", opcoes)
+    opcoes_live = [
+        "Pokémon Yellow (GB)", "Super Mario World (SNES)", 
+        "Sonic 2 (Mega Drive)", "Zelda: Ocarina of Time (N64)",
+        "Castlevania: SotN (PS1)", "Resident Evil 2 (PS1)"
+    ]
+    voto = st.selectbox("Qual clássico vamos jogar hoje?", opcoes_live)
     
     if st.button("Confirmar Voto"):
-        # Registra o voto no estado da sessão
-        st.session_state.votos_acumulados[escolha] = st.session_state.votos_acumulados.get(escolha, 0) + 1
+        st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
         st.balloons()
-        st.success(f"Voto computado para {escolha}!")
-        st.rerun() # Atualiza o box na lateral imediatamente
+        st.success(f"Voto em '{voto}' registrado!")
+        st.rerun()
 
     st.markdown("---")
+
+    # Busca de Personagem
+    st.header("🔍 Enciclopédia de Personagens")
+    busca = st.text_input("Busque um herói ou vilão:").strip().lower()
     
-    # Busca de Personagem (Mantida)
-    st.header("🔍 Busca de Personagem")
-    busca = st.text_input("Busque um título ou personagem:").strip().lower()
     if busca:
-        encontrados = [p for p in carregar_personagens() if busca in p['jogo'].lower() or busca in p['nome'].lower()]
-        for p in encontrados:
-            with st.expander(f"📌 {p['nome']}"):
-                st.write(f"**Habilidade:** {p['caracteristica']}")
+        personagens = carregar_personagens()
+        encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
+        
+        if encontrados:
+            for p in encontrados:
+                with st.expander(f"📌 {p['nome']} - {p['jogo']}"):
+                    st.write(f"**Papel:** {p['papel']}")
+                    st.write(f"**Habilidade:** {p['caracteristica']}")
+        else:
+            st.warning("Personagem não encontrado no banco de dados.")
