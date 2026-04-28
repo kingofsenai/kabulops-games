@@ -3,15 +3,20 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# --- SISTEMA DE MEMÓRIA PERSISTENTE ---
-if 'total_players' not in st.session_state:
-    st.session_state.total_players = 0
-if 'votos_acumulados' not in st.session_state:
-    st.session_state.votos_acumulados = {}
-if 'player_logado' not in st.session_state:
-    st.session_state.player_logado = None
+# --- ESCUDO DE PERSISTÊNCIA (Dados que sobrevivem ao F5) ---
+@st.cache_resource
+def iniciar_banco_global():
+    # Isso aqui só roda UMA VEZ no servidor. 
+    # Os dados aqui dentro ficam guardados mesmo se você atualizar a página.
+    return {
+        "total_players": 0,
+        "votos_acumulados": {},
+        "players_vistos": set() # Para não contar o mesmo player duas vezes no contador
+    }
 
-# --- BANCO DE DADOS COMPLETO ---
+banco_global = iniciar_banco_global()
+
+# --- BANCO DE DADOS DE PERSONAGENS ---
 def carregar_personagens():
     return [
         {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
@@ -54,11 +59,12 @@ with st.sidebar:
     st.markdown("---")
     
     st.subheader("📊 Estatísticas")
-    st.metric(label="Players Ativos", value=st.session_state.total_players)
+    st.metric(label="Players Totais", value=banco_global["total_players"])
     
-    if st.session_state.votos_acumulados:
-        mais_votado = max(st.session_state.votos_acumulados, key=st.session_state.votos_acumulados.get)
+    if banco_global["votos_acumulados"]:
+        mais_votado = max(banco_global["votos_acumulados"], key=banco_global["votos_acumulados"].get)
         st.write(f"**Líder:** {mais_votado}")
+        st.caption(f"Votos: {banco_global['votos_acumulados'][mais_votado]}")
     else:
         st.caption("Aguardando primeiro voto...")
 
@@ -72,13 +78,19 @@ with col_logo:
 
 st.markdown("---")
 
-# Sistema de Login
+# Sistema de Login (Session State local para o nome do player)
+if 'player_logado' not in st.session_state:
+    st.session_state.player_logado = None
+
 if st.session_state.player_logado is None:
     nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
     if st.button("PRESS START"):
         if nome_input:
             st.session_state.player_logado = nome_input
-            st.session_state.total_players += 1
+            # Só aumenta o contador se for um player novo na sessão global
+            if nome_input not in banco_global["players_vistos"]:
+                banco_global["total_players"] += 1
+                banco_global["players_vistos"].add(nome_input)
             st.rerun()
 else:
     st.write(f"### Bem-vindo ao Canal, **{st.session_state.player_logado}**!")
@@ -94,14 +106,15 @@ else:
     voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", opcoes_live)
     
     if st.button("Confirmar Voto"):
-        st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
+        # Grava no banco global (sobrevive ao F5)
+        banco_global["votos_acumulados"][voto] = banco_global["votos_acumulados"].get(voto, 0) + 1
         st.balloons()
         st.success(f"Voto em '{voto}' registrado!")
         st.rerun()
 
     st.markdown("---")
 
-    # Busca de Personagem (Onde estava o erro de parênteses)
+    # Busca de Personagem
     st.header("🔍 Enciclopédia de Personagens")
     busca = st.text_input("Busque um herói ou vilão:").strip().lower()
     
