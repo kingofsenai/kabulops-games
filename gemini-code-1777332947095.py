@@ -72,4 +72,4 @@ if nome_player:
 # Rodapé
 st.sidebar.markdown("---")
 st.sidebar.write("💻 **Kabulops System v2.0**")
-st.sidebar.write("Desenvolvido por Danielzinho")
+st.sidebar.write("Desenvolvido por Kabulops")
