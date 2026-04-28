@@ -109,4 +109,14 @@ else:
 
     # Busca de Personagem
     st.header("🔍 Enciclopédia de Personagens")
-    busca = st.text_input("Busque um her
+    busca = st.text_input("Busque um herói ou vilão:").strip().lower()
+    
+    if busca:
+        personagens = carregar_personagens()
+        encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
+        
+        if encontrados:
+            for p in encontrados:
+                with st.expander(f"📌 {p['nome']} - {p['jogo']}"):
+                    st.write(f"**Papel:** {p['papel']}")
+                    st.write(f"**Habilidade:** {p['caracteristica']}")
