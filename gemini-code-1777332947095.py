@@ -3,11 +3,14 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# --- INICIALIZAÇÃO DE MÉTRICAS (Memória da Sessão) ---
+# --- SISTEMA DE MEMÓRIA PERSISTENTE (Session State) ---
+# Inicializamos apenas se não existirem, para não sobrescrever com zero no recarregamento
 if 'total_players' not in st.session_state:
     st.session_state.total_players = 0
 if 'votos_acumulados' not in st.session_state:
     st.session_state.votos_acumulados = {}
+if 'player_logado' not in st.session_state:
+    st.session_state.player_logado = None
 
 # --- BANCO DE DADOS COMPLETO ---
 def carregar_personagens():
@@ -33,7 +36,7 @@ url_master = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/i
 url_ultra  = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
 url_logo   = "https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png"
 
-# --- BARRA LATERAL ANTERIOR + MÉTRICAS ---
+# --- BARRA LATERAL (MÉTRICAS SEMPRE VISÍVEIS) ---
 with st.sidebar:
     c1, c2 = st.columns([1, 2])
     with c1: st.image(url_luxury, width=75)
@@ -56,7 +59,9 @@ with st.sidebar:
     
     if st.session_state.votos_acumulados:
         mais_votado = max(st.session_state.votos_acumulados, key=st.session_state.votos_acumulados.get)
+        total_votos = sum(st.session_state.votos_acumulados.values())
         st.write(f"**Líder:** {mais_votado}")
+        st.caption(f"Total de votos colhidos: {total_votos}")
     else:
         st.caption("Aguardando primeiro voto...")
 
@@ -70,9 +75,18 @@ with col_logo:
 
 st.markdown("---")
 
-# --- FRAGMENTO PARA A ENQUETE (EVITA TRAVAMENTOS) ---
-@st.fragment
-def renderizar_enquete():
+# --- SISTEMA DE LOGIN E ENQUETE ---
+if st.session_state.player_logado is None:
+    nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
+    if st.button("PRESS START"):
+        if nome_input:
+            st.session_state.player_logado = nome_input
+            st.session_state.total_players += 1
+            st.rerun()
+else:
+    st.write(f"### Bem-vindo ao Canal, **{st.session_state.player_logado}**!")
+    
+    # Enquete
     st.header("📊 Enquete de Live")
     opcoes_live = [
         "Pokémon Yellow (GB)", "Super Mario World (SNES)", 
@@ -83,29 +97,16 @@ def renderizar_enquete():
     voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", opcoes_live)
     
     if st.button("Confirmar Voto"):
+        # Atualiza o dicionário de votos global da sessão
         st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
         st.balloons()
-        st.success(f"Voto em '{voto}' registrado!")
-        # Rerun parcial para atualizar as métricas sem travar a interface
+        st.success(f"Voto em '{voto}' registrado com sucesso!")
+        # Força o recarregamento para atualizar o gráfico/métrica na lateral
         st.rerun()
-
-# Fluxo de Login
-if 'player_logado' not in st.session_state:
-    nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
-    if st.button("PRESS START"):
-        if nome_input:
-            st.session_state.player_logado = nome_input
-            st.session_state.total_players += 1
-            st.rerun()
-else:
-    st.write(f"### Bem-vindo ao Canal, **{st.session_state.player_logado}**!")
-    
-    # Chama a função da enquete otimizada
-    renderizar_enquete()
 
     st.markdown("---")
 
-    # Busca de Personagem
+    # Busca de Personagem (Mantida)
     st.header("🔍 Enciclopédia de Personagens")
     busca = st.text_input("Busque um herói ou vilão:").strip().lower()
     
@@ -115,6 +116,4 @@ else:
         
         if encontrados:
             for p in encontrados:
-                with st.expander(f"📌 {p['nome']} - {p['jogo']}"):
-                    st.write(f"**Papel:** {p['papel']}")
-                    st.write(f"**Habilidade:** {p['caracteristica']}")
+                with st.expander(
