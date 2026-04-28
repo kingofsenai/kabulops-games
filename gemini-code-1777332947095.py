@@ -3,7 +3,7 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# Banco de Dados (Mantido 100%)
+# Banco de Dados (Mantido conforme v4.0)
 def carregar_personagens():
     return [
         # --- POKÉMON YELLOW (GEN 1) ---
@@ -31,18 +31,37 @@ def carregar_personagens():
         {"nome": "Dr. Robotnik", "jogo": "Sonic the Hedgehog", "papel": "Vilão", "caracteristica": "Máquinas Geniais"}
     ]
 
-# --- BARRA LATERAL ESQUERDA (COM POKÉBOLAS ESPECIAIS) ---
+# --- BARRA LATERAL (LAYOUT DE ELITE) ---
 with st.sidebar:
-    st.title("⚫ Kabulops Games") # Representando a Luxury Ball (Preta/Ouro)
+    # Item 1: Kabulops Games
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.image("luxury.png", width=85) # Tamanho aumentado em ~10%
+    with col2:
+        st.markdown("## **Kabulops Games**")
+    
     st.markdown("---")
-    st.write("### 🔮 Participe da Pesquisa") # Representando a Master Ball (Roxa)
-    st.info("🟡 Torne-se um Kabuloso, inscreva-se no canal!") # Representando a Ultra Ball (Amarela)
+    
+    # Item 2: Participe da Pesquisa
+    col3, col4 = st.columns([1, 2])
+    with col3:
+        st.image("master.png", width=85)
+    with col4:
+        st.markdown("### **Participe da Pesquisa**")
+        
+    st.markdown("---")
+    
+    # Item 3: Torne-se um Kabuloso
+    col5, col6 = st.columns([1, 2])
+    with col5:
+        st.image("ultra.png", width=85)
+    with col6:
+        st.markdown("#### **Torne-se um Kabuloso, inscreva-se no canal!**")
 
-# --- CONTEÚDO PRINCIPAL ---
+# --- CONTEÚDO PRINCIPAL (FILTROS MANTIDOS) ---
 st.title("🎮 CANAL KABULOPS GAMES")
 st.markdown("---")
 
-# 1ª ETAPA: NOME DO PLAYER
 nome_player = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
 
 if nome_player:
@@ -67,23 +86,19 @@ if nome_player:
     if st.button("Confirmar Voto"):
         st.balloons()
         st.success(f"🏆 VOTO REGISTRADO: {voto}")
-        st.info(f"Valeu, {nome_player}! O feedback da comunidade é o nosso combustível.")
 
     st.markdown("---")
 
     # 3ª ETAPA: BUSCA DE PERSONAGEM
     st.header("🔍 Busca de Personagem")
-    busca = st.text_input("Busque um título ou personagem (ex: Mario, Sonic, Pikachu):").strip().lower()
+    busca = st.text_input("Busque um título ou personagem:").strip().lower()
     
     if busca:
         personagens = carregar_personagens()
         encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
         
         if encontrados:
-            st.info(f"✅ Resultados para '{busca.capitalize()}':")
             for p in encontrados:
                 with st.expander(f"📌 {p['nome']} ({p['jogo']})"):
                     st.write(f"**Papel:** {p['papel']}")
                     st.write(f"**Característica:** {p['caracteristica']}")
-        else:
-            st.warning(f"❌ O personagem ou jogo '{busca}' não foi localizado.")
