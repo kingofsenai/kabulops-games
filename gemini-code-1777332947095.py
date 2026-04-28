@@ -9,7 +9,7 @@ if 'total_players' not in st.session_state:
 if 'votos_acumulados' not in st.session_state:
     st.session_state.votos_acumulados = {}
 
-# --- BANCO DE DADOS COMPLETO (Recuperado e Expandido) ---
+# --- BANCO DE DADOS COMPLETO ---
 def carregar_personagens():
     return [
         # --- POKÉMON YELLOW ---
@@ -57,7 +57,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Seção de Métricas (Integrada discretamente)
+    # Seção de Estatísticas
     st.subheader("📊 Estatísticas")
     st.metric(label="Players Ativos", value=st.session_state.total_players)
     
@@ -67,7 +67,7 @@ with st.sidebar:
     else:
         st.caption("Aguardando primeiro voto...")
 
-# --- CONTEÚDO PRINCIPAL (LOGO NO TOPO) ---
+# --- CONTEÚDO PRINCIPAL ---
 col_esq, col_logo, col_dir = st.columns([1, 3, 1])
 with col_logo:
     try:
@@ -77,7 +77,7 @@ with col_logo:
 
 st.markdown("---")
 
-# Sistema de Login/Entrada
+# Sistema de Entrada
 if 'player_logado' not in st.session_state:
     nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
     if st.button("PRESS START"):
@@ -88,14 +88,16 @@ if 'player_logado' not in st.session_state:
 else:
     st.write(f"### Bem-vindo ao Canal, **{st.session_state.player_logado}**!")
     
-    # Enquete
+    # Enquete Atualizada
     st.header("📊 Enquete de Live")
     opcoes_live = [
         "Pokémon Yellow (GB)", "Super Mario World (SNES)", 
         "Sonic 2 (Mega Drive)", "Zelda: Ocarina of Time (N64)",
         "Castlevania: SotN (PS1)", "Resident Evil 2 (PS1)"
     ]
-    voto = st.selectbox("Qual clássico vamos jogar hoje?", opcoes_live)
+    
+    # FRASE ALTERADA CONFORME SOLICITADO
+    voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", opcoes_live)
     
     if st.button("Confirmar Voto"):
         st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
@@ -107,16 +109,4 @@ else:
 
     # Busca de Personagem
     st.header("🔍 Enciclopédia de Personagens")
-    busca = st.text_input("Busque um herói ou vilão:").strip().lower()
-    
-    if busca:
-        personagens = carregar_personagens()
-        encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
-        
-        if encontrados:
-            for p in encontrados:
-                with st.expander(f"📌 {p['nome']} - {p['jogo']}"):
-                    st.write(f"**Papel:** {p['papel']}")
-                    st.write(f"**Habilidade:** {p['caracteristica']}")
-        else:
-            st.warning("Personagem não encontrado no banco de dados.")
+    busca = st.text_input("Busque um her
