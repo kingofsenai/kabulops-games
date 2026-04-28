@@ -3,49 +3,41 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# Banco de Dados (Mantido conforme v4.0)
+# Banco de Dados (Mantido conforme solicitado)
 def carregar_personagens():
     return [
-        # --- POKÉMON YELLOW (GEN 1) ---
         {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
         {"nome": "Charizard", "jogo": "Pokémon Yellow", "papel": "Atacante", "caracteristica": "Fire/Flying - Lança-chamas"},
         {"nome": "Blastoise", "jogo": "Pokémon Yellow", "papel": "Defensor", "caracteristica": "Water Type - Hydro Pump"},
         {"nome": "Venusaur", "jogo": "Pokémon Yellow", "papel": "Suporte", "caracteristica": "Grass/Poison - Solar Beam"},
         {"nome": "Mewtwo", "jogo": "Pokémon Yellow", "papel": "Lendário", "caracteristica": "Psychic Type - Amnesia/Psychic"},
         {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas de Corte"},
-
-        # --- SUPER MARIO BROS ---
         {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Equilíbrio"},
         {"nome": "Luigi", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Salto Alto"},
-        {"nome": "Bowser", "jogo": "Super Mario Bros", "papel": "Vilão", "caracteristica": "Força Bruta"},
-        {"nome": "Peach", "jogo": "Super Mario Bros", "papel": "Realeza", "caracteristica": "Flutuar"},
-        {"nome": "Toad", "jogo": "Super Mario Bros", "papel": "Suporte", "caracteristica": "Velocidade"},
-        {"nome": "Yoshi", "jogo": "Super Mario Bros", "papel": "Montaria", "caracteristica": "Língua Extensível"},
-
-        # --- SONIC THE HEDGEHOG ---
         {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade"},
-        {"nome": "Tails", "jogo": "Sonic the Hedgehog", "papel": "Piloto", "caracteristica": "Voo Duplo"},
-        {"nome": "Knuckles", "jogo": "Sonic the Hedgehog", "papel": "Guardião", "caracteristica": "Planar e Escalar"},
-        {"nome": "Amy Rose", "jogo": "Sonic the Hedgehog", "papel": "Aliada", "caracteristica": "Martelo Piko Piko"},
-        {"nome": "Metal Sonic", "jogo": "Sonic the Hedgehog", "papel": "Rival", "caracteristica": "Cópia de Habilidades"},
-        {"nome": "Dr. Robotnik", "jogo": "Sonic the Hedgehog", "papel": "Vilão", "caracteristica": "Máquinas Geniais"}
+        {"nome": "Knuckles", "jogo": "Sonic the Hedgehog", "papel": "Guardião", "caracteristica": "Planar/Escalar"}
     ]
 
-# --- BARRA LATERAL (LAYOUT DE ELITE) ---
+# URLs das Imagens (Substituindo os arquivos locais que causaram erro)
+url_luxury = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png"
+url_master = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
+url_ultra  = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
+
+# --- BARRA LATERAL (LAYOUT COM URLs PARA EVITAR ERRO) ---
 with st.sidebar:
     # Item 1: Kabulops Games
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.image("luxury.png", width=85) # Tamanho aumentado em ~10%
+        st.image(url_luxury, width=80) 
     with col2:
-        st.markdown("## **Kabulops Games**")
+        st.markdown("### **Kabulops Games**")
     
     st.markdown("---")
     
     # Item 2: Participe da Pesquisa
     col3, col4 = st.columns([1, 2])
     with col3:
-        st.image("master.png", width=85)
+        st.image(url_master, width=80)
     with col4:
         st.markdown("### **Participe da Pesquisa**")
         
@@ -54,9 +46,9 @@ with st.sidebar:
     # Item 3: Torne-se um Kabuloso
     col5, col6 = st.columns([1, 2])
     with col5:
-        st.image("ultra.png", width=85)
+        st.image(url_ultra, width=80)
     with col6:
-        st.markdown("#### **Torne-se um Kabuloso, inscreva-se no canal!**")
+        st.markdown("### **Torne-se um Kabuloso, inscreva-se no canal!**")
 
 # --- CONTEÚDO PRINCIPAL (FILTROS MANTIDOS) ---
 st.title("🎮 CANAL KABULOPS GAMES")
@@ -73,12 +65,10 @@ if nome_player:
     st.write(f"{nome_player}, qual game merece uma live hoje?")
     
     opcoes_live = [
-        "1. Pokémon Yellow (Game Boy)", "2. Phantasy Star (Master System)",
-        "3. Zelda: A Link to the Past (SNES)", "4. Sonic the Hedgehog 2 (Mega Drive)",
-        "5. Super Mario World (SNES)", "6. Cotton 2 (Sega Saturn)",
-        "7. Zelda: Ocarina of Time (N64)", "8. King of Fighters '98 (Neo Geo)",
-        "9. Castlevania: SotN (PS1)", "10. Metal Gear Solid (PS1)",
-        "11. Resident Evil 2 (PS1)", "12. Street Fighter II (Arcade)"
+        "1. Pokémon Yellow", "2. Phantasy Star", "3. Zelda: ALTTP", 
+        "4. Sonic 2", "5. Super Mario World", "6. Cotton 2",
+        "7. Zelda: OOT", "8. KOF '98", "9. Castlevania: SotN",
+        "10. Metal Gear Solid", "11. Resident Evil 2", "12. Street Fighter II"
     ]
     
     voto = st.selectbox("Escolha uma opção de 1 a 12:", opcoes_live)
