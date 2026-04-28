@@ -3,7 +3,7 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# Banco de Dados (Mantido conforme v4.0)
+# Banco de Dados (Mantido 100%)
 def carregar_personagens():
     return [
         # --- POKÉMON YELLOW (GEN 1) ---
@@ -31,18 +31,25 @@ def carregar_personagens():
         {"nome": "Dr. Robotnik", "jogo": "Sonic the Hedgehog", "papel": "Vilão", "caracteristica": "Máquinas Geniais"}
     ]
 
-# Cabeçalho Principal
+# --- BARRA LATERAL ESQUERDA (COM POKÉBOLAS) ---
+with st.sidebar:
+    st.title("🔴 Kabulops Games")
+    st.markdown("---")
+    st.write("### 🔴 Participe da Pesquisa")
+    st.info("🔴 Torne-se um Kabuloso, inscreva-se no canal!")
+
+# --- CONTEÚDO PRINCIPAL ---
 st.title("🎮 CANAL KABULOPS GAMES")
 st.markdown("---")
 
-# 1ª ETAPA: NOME DO PLAYER (Filtro mantido)
+# 1ª ETAPA: NOME DO PLAYER
 nome_player = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
 
 if nome_player:
     st.write(f"### Seja bem-vindo, **{nome_player}**!")
     st.markdown("---")
 
-    # 2ª ETAPA: PERSONAGEM FAVORITO / ENQUETE (Filtro mantido)
+    # 2ª ETAPA: ENQUETE DE LIVE
     st.header("📊 Enquete de Live")
     st.write(f"{nome_player}, qual game merece uma live hoje?")
     
@@ -64,7 +71,7 @@ if nome_player:
 
     st.markdown("---")
 
-    # 3ª ETAPA: BUSCA DE PERSONAGEM (Filtro mantido)
+    # 3ª ETAPA: BUSCA DE PERSONAGEM
     st.header("🔍 Busca de Personagem")
     busca = st.text_input("Busque um título ou personagem (ex: Mario, Sonic, Pikachu):").strip().lower()
     
@@ -80,5 +87,3 @@ if nome_player:
                     st.write(f"**Característica:** {p['caracteristica']}")
         else:
             st.warning(f"❌ O personagem ou jogo '{busca}' não foi localizado.")
-
-# --- ATUALIZAÇÃO DA BARRA
