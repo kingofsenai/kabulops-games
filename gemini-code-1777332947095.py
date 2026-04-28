@@ -12,19 +12,16 @@ if 'votos_acumulados' not in st.session_state:
 # --- BANCO DE DADOS COMPLETO ---
 def carregar_personagens():
     return [
-        # --- POKÉMON YELLOW ---
         {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
         {"nome": "Charizard", "jogo": "Pokémon Yellow", "papel": "Atacante", "caracteristica": "Fire/Flying - Lança-chamas"},
         {"nome": "Blastoise", "jogo": "Pokémon Yellow", "papel": "Defensor", "caracteristica": "Water Type - Hydro Pump"},
         {"nome": "Venusaur", "jogo": "Pokémon Yellow", "papel": "Suporte", "caracteristica": "Grass/Poison - Solar Beam"},
         {"nome": "Mewtwo", "jogo": "Pokémon Yellow", "papel": "Lendário", "caracteristica": "Psychic Type - Psychic"},
         {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas de Corte"},
-        # --- MARIO BROS ---
         {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Equilíbrio"},
         {"nome": "Luigi", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Salto Alto"},
         {"nome": "Bowser", "jogo": "Super Mario Bros", "papel": "Vilão", "caracteristica": "Força Bruta"},
         {"nome": "Yoshi", "jogo": "Super Mario Bros", "papel": "Montaria", "caracteristica": "Língua Extensível"},
-        # --- SONIC ---
         {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade Ultra"},
         {"nome": "Tails", "jogo": "Sonic the Hedgehog", "papel": "Piloto", "caracteristica": "Voo Duplo"},
         {"nome": "Knuckles", "jogo": "Sonic the Hedgehog", "papel": "Guardião", "caracteristica": "Planar e Escalar"}
@@ -38,26 +35,22 @@ url_logo   = "https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/
 
 # --- BARRA LATERAL ANTERIOR + MÉTRICAS ---
 with st.sidebar:
-    # Pokébola 1
     c1, c2 = st.columns([1, 2])
     with c1: st.image(url_luxury, width=75)
     with c2: st.markdown("### **Kabulops Games**")
     st.markdown("---")
     
-    # Pokébola 2
     c3, c4 = st.columns([1, 2])
     with c3: st.image(url_master, width=75)
     with c4: st.markdown("### **Participe da Pesquisa**")
     st.markdown("---")
     
-    # Pokébola 3
     c5, c6 = st.columns([1, 2])
     with c5: st.image(url_ultra, width=75)
     with c6: st.markdown("#### **Torne-se um Kabuloso!**")
     
     st.markdown("---")
     
-    # Seção de Estatísticas
     st.subheader("📊 Estatísticas")
     st.metric(label="Players Ativos", value=st.session_state.total_players)
     
@@ -77,7 +70,26 @@ with col_logo:
 
 st.markdown("---")
 
-# Sistema de Entrada
+# --- FRAGMENTO PARA A ENQUETE (EVITA TRAVAMENTOS) ---
+@st.fragment
+def renderizar_enquete():
+    st.header("📊 Enquete de Live")
+    opcoes_live = [
+        "Pokémon Yellow (GB)", "Super Mario World (SNES)", 
+        "Sonic 2 (Mega Drive)", "Zelda: Ocarina of Time (N64)",
+        "Castlevania: SotN (PS1)", "Resident Evil 2 (PS1)"
+    ]
+    
+    voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", opcoes_live)
+    
+    if st.button("Confirmar Voto"):
+        st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
+        st.balloons()
+        st.success(f"Voto em '{voto}' registrado!")
+        # Rerun parcial para atualizar as métricas sem travar a interface
+        st.rerun()
+
+# Fluxo de Login
 if 'player_logado' not in st.session_state:
     nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
     if st.button("PRESS START"):
@@ -88,22 +100,8 @@ if 'player_logado' not in st.session_state:
 else:
     st.write(f"### Bem-vindo ao Canal, **{st.session_state.player_logado}**!")
     
-    # Enquete Atualizada
-    st.header("📊 Enquete de Live")
-    opcoes_live = [
-        "Pokémon Yellow (GB)", "Super Mario World (SNES)", 
-        "Sonic 2 (Mega Drive)", "Zelda: Ocarina of Time (N64)",
-        "Castlevania: SotN (PS1)", "Resident Evil 2 (PS1)"
-    ]
-    
-    # FRASE ALTERADA CONFORME SOLICITADO
-    voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", opcoes_live)
-    
-    if st.button("Confirmar Voto"):
-        st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
-        st.balloons()
-        st.success(f"Voto em '{voto}' registrado!")
-        st.rerun()
+    # Chama a função da enquete otimizada
+    renderizar_enquete()
 
     st.markdown("---")
 
