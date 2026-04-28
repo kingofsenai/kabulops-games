@@ -1,9 +1,9 @@
 import streamlit as st
 
-# Configurações de Design - Mantendo o padrão aprovado
-st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="wide")
+# Configurações de Design
+st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# Banco de Dados (Mantido 100% conforme filtros anteriores)
+# Banco de Dados de Personagens (Mantido 100%)
 def carregar_personagens():
     return [
         {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
@@ -16,7 +16,7 @@ def carregar_personagens():
         {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade"}
     ]
 
-# --- BARRA LATERAL ESQUERDA (ESTRUTURA MANTIDA) ---
+# --- BARRA LATERAL ESQUERDA (MANTIDA) ---
 with st.sidebar:
     # Item 1: Luxury Ball
     c1, c2 = st.columns([1, 2])
@@ -41,41 +41,50 @@ with st.sidebar:
     with c6:
         st.markdown("#### **Torne-se um Kabuloso, inscreva-se no canal!**")
 
-# --- CONTEÚDO PRINCIPAL COM SIMETRIA ---
-# Criamos duas colunas grandes: a esquerda para os filtros e a direita para o logo
-col_filtros, col_logo = st.columns([1, 1], gap="large")
+# --- CONTEÚDO PRINCIPAL (COM O LOGO NO TOPO) ---
 
-with col_filtros:
-    st.title("🎮 CANAL KABULOPS GAMES")
+# Centralizando o Logo entre a sidebar e o conteúdo
+col_vazia_esq, col_logo, col_vazia_dir = st.columns([1, 3, 1])
+with col_logo:
+    st.image("3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.jpg", use_container_width=True)
+
+st.markdown("---")
+
+# 1ª ETAPA: NOME DO PLAYER (Filtros preservados)
+nome_player = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
+
+if nome_player:
+    st.write(f"### Seja bem-vindo, **{nome_player}**!")
     st.markdown("---")
-    
-    nome_player = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
-    
-    if nome_player:
-        st.write(f"### Seja bem-vindo, **{nome_player}**!")
-        
-        # Enquete
-        st.header("📊 Enquete de Live")
-        opcoes_live = ["Pokémon Yellow", "Phantasy Star", "Sonic 2", "Zelda", "RE 2", "KOF 98"]
-        voto = st.selectbox("Qual game merece live hoje?", opcoes_live)
-        if st.button("Confirmar Voto"):
-            st.balloons()
-            st.success(f"🏆 Voto em {voto} registrado!")
 
-        st.markdown("---")
+    # 2ª ETAPA: ENQUETE DE LIVE
+    st.header("📊 Enquete de Live")
+    st.write(f"{nome_player}, qual game merece uma live hoje?")
+    
+    opcoes_live = [
+        "1. Pokémon Yellow", "2. Phantasy Star", "3. Zelda", 
+        "4. Sonic 2", "5. Super Mario World", "6. Castlevania: SotN"
+    ]
+    
+    voto = st.selectbox("Escolha uma opção:", opcoes_live)
+    
+    if st.button("Confirmar Voto"):
+        st.balloons()
+        st.success(f"🏆 VOTO REGISTRADO: {voto}")
+
+    st.markdown("---")
+
+    # 3ª ETAPA: BUSCA DE PERSONAGEM
+    st.header("🔍 Busca de Personagem")
+    busca = st.text_input("Busque um título ou personagem:").strip().lower()
+    
+    if busca:
+        personagens = carregar_personagens()
+        encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
         
-        # Busca
-        st.header("🔍 Busca de Personagem")
-        busca = st.text_input("Busque um título ou personagem:").strip().lower()
-        if busca:
-            personagens = carregar_personagens()
-            encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
+        if encontrados:
             for p in encontrados:
                 with st.expander(f"📌 {p['nome']} ({p['jogo']})"):
                     st.write(f"**Habilidade:** {p['caracteristica']}")
-
-with col_logo:
-    # A mágica da simetria: Logo grande, centralizado e sem texto
-    st.markdown("<br><br>", unsafe_allow_html=True) # Espaçamento para alinhar com o topo do formulário
-    st.image("3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.jfif", use_container_width=True)
-    st.caption("© 2026 Kabulops Retro Gaming - Est. 2026") # Apenas um detalhe discreto abaixo
+        else:
+            st.warning(f"❌ '{busca}' não localizado.")
