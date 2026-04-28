@@ -3,7 +3,7 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# --- ESCUDO DE PERSISTÊNCIA ---
+# --- ESCUDO DE PERSISTÊNCIA (Dados Globais) ---
 @st.cache_resource
 def iniciar_banco_global():
     return {
@@ -14,45 +14,51 @@ def iniciar_banco_global():
 
 banco_global = iniciar_banco_global()
 
-# --- BANCO DE DADOS EXPANDIDO ---
+# --- MEGA ENCICLOPÉDIA RECHEADA ---
 def carregar_personagens():
     return [
-        # --- POKÉMON (Novos + Clássicos) ---
-        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
-        {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas de Corte"},
-        {"nome": "Dragonite", "jogo": "Pokémon Yellow", "papel": "Pseudo-Lendário", "caracteristica": "Dragon/Flying - Hyper Beam"},
-        {"nome": "Gengar", "jogo": "Pokémon Yellow", "papel": "Assassino", "caracteristica": "Ghost/Poison - Dream Eater"},
-        {"nome": "Arcanine", "jogo": "Pokémon Yellow", "papel": "Veloz", "caracteristica": "Fire Type - Extreme Speed"},
-        {"nome": "Lapras", "jogo": "Pokémon Yellow", "papel": "Transporte/Tanque", "caracteristica": "Water/Ice - Ice Beam"},
-        {"nome": "Snorlax", "jogo": "Pokémon Yellow", "papel": "Tanque", "caracteristica": "Normal Type - Body Slam"},
+        # --- POKÉMON YELLOW ---
+        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "golpe": "Thunderbolt (Choque do Trovão)"},
+        {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "golpe": "Slash (Lâminas de Corte)"},
+        {"nome": "Charizard", "jogo": "Pokémon Yellow", "papel": "Atacante", "golpe": "Flamethrower (Lança-chamas)"},
+        {"nome": "Blastoise", "jogo": "Pokémon Yellow", "papel": "Defensor", "golpe": "Hydro Pump (Jato d'Água)"},
+        {"nome": "Venusaur", "jogo": "Pokémon Yellow", "papel": "Suporte", "golpe": "Solar Beam (Raio Solar)"},
+        {"nome": "Mewtwo", "jogo": "Pokémon Yellow", "papel": "Lendário", "golpe": "Psychic (Poder Psíquico)"},
+        {"nome": "Dragonite", "jogo": "Pokémon Yellow", "papel": "Pseudo-Lendário", "golpe": "Hyper Beam (Hiper Raio)"},
+        {"nome": "Gengar", "jogo": "Pokémon Yellow", "papel": "Assassino", "golpe": "Dream Eater (Comedor de Sonhos)"},
+        {"nome": "Snorlax", "jogo": "Pokémon Yellow", "papel": "Tanque", "golpe": "Body Slam (Pancada Corporal)"},
 
         # --- STREET FIGHTER ---
-        {"nome": "Ryu", "jogo": "Street Fighter II", "papel": "Protagonista", "caracteristica": "Hadouken / Shoryuken"},
-        {"nome": "Chun-Li", "jogo": "Street Fighter II", "papel": "Velocidade", "caracteristica": "Hyakuretsu Kyaku (Lightning Kick)"},
-        {"nome": "Guile", "jogo": "Street Fighter II", "papel": "Defensivo", "caracteristica": "Sonic Boom / Flash Kick"},
-        {"nome": "Akuma", "jogo": "Street Fighter II", "papel": "Antagonista", "caracteristica": "Shun Goku Satsu"},
-        {"nome": "Blanka", "jogo": "Street Fighter II", "papel": "Selvagem", "caracteristica": "Electric Thunder"},
+        {"nome": "Ryu", "jogo": "Street Fighter II", "papel": "Protagonista", "golpe": "Hadouken"},
+        {"nome": "Ken", "jogo": "Street Fighter II", "papel": "Rival", "golpe": "Shoryuken (Dragão Ascendente)"},
+        {"nome": "Chun-Li", "jogo": "Street Fighter II", "papel": "Velocidade", "golpe": "Kikoken"},
+        {"nome": "Guile", "jogo": "Street Fighter II", "papel": "Defensivo", "golpe": "Sonic Boom"},
+        {"nome": "Blanka", "jogo": "Street Fighter II", "papel": "Selvagem", "golpe": "Electric Thunder"},
+        {"nome": "Zangief", "jogo": "Street Fighter II", "papel": "Grappler", "golpe": "Spinning Piledriver"},
 
         # --- MORTAL KOMBAT ---
-        {"nome": "Scorpion", "jogo": "Mortal Kombat", "papel": "Vingador", "caracteristica": "Get Over Here! (Spear)"},
-        {"nome": "Sub-Zero", "jogo": "Mortal Kombat", "papel": "Criomante", "caracteristica": "Congelamento"},
-        {"nome": "Raiden", "jogo": "Mortal Kombat", "papel": "Deus do Trovão", "caracteristica": "Teleporte e Raios"},
-        {"nome": "Kitana", "jogo": "Mortal Kombat", "papel": "Princesa", "caracteristica": "Leques Cortantes"},
-        {"nome": "Liu Kang", "jogo": "Mortal Kombat", "papel": "Campeão", "caracteristica": "Bicycle Kick / Dragão de Fogo"},
+        {"nome": "Scorpion", "jogo": "Mortal Kombat", "papel": "Vingador", "golpe": "Spear (Get Over Here!)"},
+        {"nome": "Sub-Zero", "jogo": "Mortal Kombat", "papel": "Criomante", "golpe": "Ice Blast (Congelamento)"},
+        {"nome": "Raiden", "jogo": "Mortal Kombat", "papel": "Deus", "golpe": "Torpedo Elétrico"},
+        {"nome": "Liu Kang", "jogo": "Mortal Kombat", "papel": "Campeão", "golpe": "Bicycle Kick (Chute Bicicleta)"},
+        {"nome": "Kitana", "jogo": "Mortal Kombat", "papel": "Princesa", "golpe": "Fan Throw (Lançamento de Leque)"},
+        {"nome": "Johnny Cage", "jogo": "Mortal Kombat", "papel": "Astro", "golpe": "Shadow Kick"},
 
-        # --- PERSONAGENS CLÁSSICOS ---
-        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade"},
-        {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Pulo e Fogo"},
-        {"nome": "Alex Kidd", "jogo": "Alex Kidd in Miracle World", "papel": "Mascote", "caracteristica": "Soco de Pedra"},
+        # --- MARIO & SONIC & OUTROS ---
+        {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "golpe": "Fireball (Bola de Fogo)"},
+        {"nome": "Luigi", "jogo": "Super Mario World", "papel": "Herói", "golpe": "Super Pulo"},
+        {"nome": "Yoshi", "jogo": "Super Mario World", "papel": "Montaria", "golpe": "Língua Extensível"},
+        {"nome": "Bowser", "jogo": "Super Mario Bros", "papel": "Vilão", "golpe": "Fire Breath (Sopro de Fogo)"},
+        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "golpe": "Spin Dash"},
+        {"nome": "Tails", "jogo": "Sonic the Hedgehog", "papel": "Apoio", "golpe": "Voo com Caudas"},
+        {"nome": "Knuckles", "jogo": "Sonic the Hedgehog", "papel": "Força", "golpe": "Soco Planador"},
+        {"nome": "Alex Kidd", "jogo": "Alex Kidd", "papel": "Mascote", "golpe": "Soco Janken (Pedra)"}
     ]
 
-# Lista de Jogos para Enquete (Expandida com 10 de cada console)
+# Lista de Jogos (Expandida)
 opcoes_live = [
-    # MASTER SYSTEM
     "Alex Kidd in Miracle World", "Castle of Illusion", "Phantasy Star", "Wonder Boy III", "Shinobi (Master)", "Sonic (Master)", "Asterix", "Psycho Fox", "Golden Axe", "California Games",
-    # MEGA DRIVE
     "Sonic 2", "Streets of Rage 2", "Shinobi III", "Gunstar Heroes", "Earthworm Jim", "Mortal Kombat II", "Street Fighter II Special Edition", "Comix Zone", "Aladdin", "Castle of Illusion (Mega)",
-    # PLAYSTATION 1
     "Resident Evil 2", "Castlevania: SotN", "Metal Gear Solid", "Crash Bandicoot 3", "Final Fantasy VII", "Tekken 3", "Silent Hill", "Tony Hawk's Pro Skater 2", "Spider-Man", "Gran Turismo 2"
 ]
 
@@ -110,19 +116,25 @@ if st.session_state.player_logado is None:
 else:
     st.write(f"### Bem-vindo, **{st.session_state.player_logado}**!")
     
-    # Enquete
+    # --- ENQUETE COM CORREÇÃO DE ANIMAÇÃO ---
     st.header("📊 Enquete de Live")
     voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", sorted(opcoes_live))
     
     if st.button("Confirmar Voto"):
+        # Registro do voto
         banco_global["votos_acumulados"][voto] = banco_global["votos_acumulados"].get(voto, 0) + 1
+        # Efeito visual
         st.balloons()
-        st.success(f"Voto em '{voto}' registrado!")
+        st.snow() # Adicionei neve para dar um efeito extra de "confirmação"
+        st.success(f"✅ Voto computado: {voto}!")
+        # Pequena pausa para o usuário ver a mensagem antes do rerun
+        import time
+        time.sleep(1) 
         st.rerun()
 
     st.markdown("---")
 
-    # Busca de Personagem
+    # --- ENCICLOPÉDIA RECHEADA ---
     st.header("🔍 Enciclopédia de Personagens")
     busca = st.text_input("Busque um herói ou vilão:").strip().lower()
     
@@ -132,6 +144,6 @@ else:
             for p in encontrados:
                 with st.expander(f"📌 {p['nome']} - {p['jogo']}"):
                     st.write(f"**Papel:** {p['papel']}")
-                    st.write(f"**Habilidade:** {p['caracteristica']}")
+                    st.write(f"**Golpe Especial:** {p['golpe']}")
         else:
             st.warning("Personagem não encontrado.")
