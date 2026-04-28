@@ -3,8 +3,7 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# --- SISTEMA DE MEMÓRIA PERSISTENTE (Session State) ---
-# Inicializamos apenas se não existirem, para não sobrescrever com zero no recarregamento
+# --- SISTEMA DE MEMÓRIA PERSISTENTE ---
 if 'total_players' not in st.session_state:
     st.session_state.total_players = 0
 if 'votos_acumulados' not in st.session_state:
@@ -36,7 +35,7 @@ url_master = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/i
 url_ultra  = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
 url_logo   = "https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png"
 
-# --- BARRA LATERAL (MÉTRICAS SEMPRE VISÍVEIS) ---
+# --- BARRA LATERAL ---
 with st.sidebar:
     c1, c2 = st.columns([1, 2])
     with c1: st.image(url_luxury, width=75)
@@ -59,9 +58,7 @@ with st.sidebar:
     
     if st.session_state.votos_acumulados:
         mais_votado = max(st.session_state.votos_acumulados, key=st.session_state.votos_acumulados.get)
-        total_votos = sum(st.session_state.votos_acumulados.values())
         st.write(f"**Líder:** {mais_votado}")
-        st.caption(f"Total de votos colhidos: {total_votos}")
     else:
         st.caption("Aguardando primeiro voto...")
 
@@ -75,7 +72,7 @@ with col_logo:
 
 st.markdown("---")
 
-# --- SISTEMA DE LOGIN E ENQUETE ---
+# Sistema de Login
 if st.session_state.player_logado is None:
     nome_input = st.text_input("[START] Digite seu Nick para entrar:", placeholder="Ex: Player1...")
     if st.button("PRESS START"):
@@ -97,16 +94,14 @@ else:
     voto = st.selectbox("Qual clássico você gostaria de assistir em nossa primeira live?", opcoes_live)
     
     if st.button("Confirmar Voto"):
-        # Atualiza o dicionário de votos global da sessão
         st.session_state.votos_acumulados[voto] = st.session_state.votos_acumulados.get(voto, 0) + 1
         st.balloons()
-        st.success(f"Voto em '{voto}' registrado com sucesso!")
-        # Força o recarregamento para atualizar o gráfico/métrica na lateral
+        st.success(f"Voto em '{voto}' registrado!")
         st.rerun()
 
     st.markdown("---")
 
-    # Busca de Personagem (Mantida)
+    # Busca de Personagem (Onde estava o erro de parênteses)
     st.header("🔍 Enciclopédia de Personagens")
     busca = st.text_input("Busque um herói ou vilão:").strip().lower()
     
@@ -116,4 +111,8 @@ else:
         
         if encontrados:
             for p in encontrados:
-                with st.expander(
+                with st.expander(f"📌 {p['nome']} - {p['jogo']}"):
+                    st.write(f"**Papel:** {p['papel']}")
+                    st.write(f"**Habilidade:** {p['caracteristica']}")
+        else:
+            st.warning("Personagem não encontrado.")
