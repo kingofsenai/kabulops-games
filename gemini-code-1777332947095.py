@@ -3,77 +3,89 @@ import streamlit as st
 # Configurações de Design
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# Banco de Dados (Mantido 100%)
+# --- INICIALIZAÇÃO DO SISTEMA DE MÉTRICAS (Session State) ---
+if 'total_players' not in st.session_state:
+    st.session_state.total_players = 0
+if 'votos_acumulados' not in st.session_state:
+    st.session_state.votos_acumulados = {}
+
+# Banco de Dados de Personagens
 def carregar_personagens():
     return [
-        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type - Choque do Trovão"},
-        {"nome": "Charizard", "jogo": "Pokémon Yellow", "papel": "Atacante", "caracteristica": "Fire/Flying - Lança-chamas"},
-        {"nome": "Blastoise", "jogo": "Pokémon Yellow", "papel": "Defensor", "caracteristica": "Water Type - Hydro Pump"},
-        {"nome": "Venusaur", "jogo": "Pokémon Yellow", "papel": "Suporte", "caracteristica": "Grass/Poison - Solar Beam"},
-        {"nome": "Mewtwo", "jogo": "Pokémon Yellow", "papel": "Lendário", "caracteristica": "Psychic Type - Amnesia/Psychic"},
-        {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas de Corte"},
-        {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Equilíbrio"},
-        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade"}
+        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Starter", "caracteristica": "Electric Type"},
+        {"nome": "Kabutops", "jogo": "Pokémon Yellow", "papel": "Guerreiro", "caracteristica": "Rock/Water - Lâminas"},
+        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Herói", "caracteristica": "Velocidade"},
+        {"nome": "Mario", "jogo": "Super Mario Bros", "papel": "Herói", "caracteristica": "Equilíbrio"}
     ]
 
-# Links das Pokébolas (URLs Externas)
+# URLs das Imagens
 url_luxury = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png"
 url_master = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
 url_ultra  = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
-
-# --- LINK DO SEU LOGO (CORRIGIDO COM ASPAS E FORMATO RAW) ---
-url_logo = "https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png"
+url_logo   = "https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png"
 
 # --- BARRA LATERAL ---
 with st.sidebar:
+    # Painel de Identidade
     c1, c2 = st.columns([1, 2])
     with c1: st.image(url_luxury, width=70)
     with c2: st.markdown("### **Kabulops Games**")
+    
     st.markdown("---")
     
-    c3, c4 = st.columns([1, 2])
-    with c3: st.image(url_master, width=70)
-    with c4: st.markdown("### **Participe da Pesquisa**")
-    st.markdown("---")
+    # --- NOVO BOX DE RESULTADOS PARCIAIS ---
+    st.subheader("📊 Estatísticas da Live")
+    st.metric(label="Players que acessaram", value=st.session_state.total_players)
     
-    c5, c6 = st.columns([1, 2])
-    with c5: st.image(url_ultra, width=70)
-    with c6: st.markdown("#### **Torne-se um Kabuloso!**")
+    if st.session_state.votos_acumulados:
+        # Pega o jogo mais votado
+        mais_votado = max(st.session_state.votos_acumulados, key=st.session_state.votos_acumulados.get)
+        qtd_votos = st.session_state.votos_acumulados[mais_votado]
+        st.write(f"**Líder da Enquete:**")
+        st.success(f"{mais_votado} ({qtd_votos} votos)")
+    else:
+        st.info("Nenhum voto registrado ainda.")
 
-# --- CONTEÚDO PRINCIPAL (LOGO CENTRALIZADO) ---
+    st.markdown("---")
+    st.write("🔴 **Torne-se um Kabuloso!**")
+
+# --- CONTEÚDO PRINCIPAL ---
 col_esq, col_logo, col_dir = st.columns([1, 3, 1])
 with col_logo:
-    # O uso do 'try' garante que o app não quebre se o link falhar
-    try:
-        st.image(url_logo, use_container_width=True)
-    except:
-        st.title("🎮 CANAL KABULOPS GAMES")
+    st.image(url_logo, use_container_width=True)
 
 st.markdown("---")
 
-# --- FILTROS (MANTIDOS EXATAMENTE ONDE ESTÃO) ---
-nome_player = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
-
-if nome_player:
-    st.write(f"### Seja bem-vindo, **{nome_player}**!")
-    st.markdown("---")
-
+# Login do Player
+if 'player_logado' not in st.session_state:
+    nome_input = st.text_input("[START] Qual é o seu nome, Player?", placeholder="Digite seu Nick...")
+    if st.button("Entrar no Game"):
+        if nome_input:
+            st.session_state.player_logado = nome_input
+            st.session_state.total_players += 1 # Conta novo acesso
+            st.rerun()
+else:
+    st.write(f"### Seja bem-vindo, **{st.session_state.player_logado}**!")
+    
+    # Enquete
     st.header("📊 Enquete de Live")
-    opcoes_live = ["Pokémon Yellow", "Phantasy Star", "Zelda", "Sonic 2", "Super Mario World", "Castlevania"]
-    voto = st.selectbox("Qual game merece live hoje?", opcoes_live)
+    opcoes = ["Pokémon Yellow", "Sonic 2", "Super Mario World", "Castlevania"]
+    escolha = st.selectbox("Qual game merece live hoje?", opcoes)
     
     if st.button("Confirmar Voto"):
+        # Registra o voto no estado da sessão
+        st.session_state.votos_acumulados[escolha] = st.session_state.votos_acumulados.get(escolha, 0) + 1
         st.balloons()
-        st.success(f"🏆 VOTO REGISTRADO: {voto}")
+        st.success(f"Voto computado para {escolha}!")
+        st.rerun() # Atualiza o box na lateral imediatamente
 
     st.markdown("---")
-
+    
+    # Busca de Personagem (Mantida)
     st.header("🔍 Busca de Personagem")
     busca = st.text_input("Busque um título ou personagem:").strip().lower()
-    
     if busca:
-        personagens = carregar_personagens()
-        encontrados = [p for p in personagens if busca in p['jogo'].lower() or busca in p['nome'].lower()]
+        encontrados = [p for p in carregar_personagens() if busca in p['jogo'].lower() or busca in p['nome'].lower()]
         for p in encontrados:
-            with st.expander(f"📌 {p['nome']} ({p['jogo']})"):
+            with st.expander(f"📌 {p['nome']}"):
                 st.write(f"**Habilidade:** {p['caracteristica']}")
