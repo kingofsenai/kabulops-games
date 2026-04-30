@@ -18,9 +18,7 @@ def carregar_dados():
         try:
             with open(DB_FILE, "r") as f:
                 data = json.load(f)
-                # Garante que 'usuarios' seja um set para evitar duplicatas na memória
                 data["usuarios"] = set(data.get("usuarios", []))
-                # Garante que 'votos' exista
                 if "votos" not in data:
                     data["votos"] = {}
                 return data
@@ -34,7 +32,6 @@ def salvar_dados(dados):
     with open(DB_FILE, "w") as f:
         json.dump(dados_para_salvar, f, indent=4)
 
-# Inicialização do estado da sessão
 if "db" not in st.session_state:
     st.session_state.db = carregar_dados()
 
@@ -42,7 +39,6 @@ def get_top_3():
     db = st.session_state.db
     if not db["votos"]:
         return []
-    # Ordena os jogos por número de votos
     return sorted(db["votos"].items(), key=lambda x: x[1], reverse=True)[:3]
 
 # --- 3. BIBLIOTECA DE PERSONAGENS ---
@@ -69,10 +65,28 @@ def carregar_biblioteca_estatica():
         {"nome": "Terry Bogard", "jogo": "Fatal Fury", "papel": "Lutador", "golpe": "Power Wave / Burn Knuckle"},
     ]
 
-# --- 4. SIDEBAR (PLACAR) ---
+# --- 4. SIDEBAR (PLACAR E POKEBOLAS) ---
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=40)
+    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=50)
     st.title("Kabulops Games")
+    
+    # --- AS POKEBOLAS RECUPERADAS ---
+    st.markdown("### 🔴 Pokebolas Perdidas")
+    
+    # Pokebola 1: Inscreva-se
+    col_insc, text_insc = st.columns([1, 4])
+    with col_insc:
+        st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", width=30)
+    with text_insc:
+        st.link_button("Inscreva-se no Canal", "https://www.youtube.com/@kabulops") # Coloque o link real aqui
+
+    # Pokebola 2: Enquete
+    col_enq, text_enq = st.columns([1, 4])
+    with col_enq:
+        st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", width=30)
+    with text_enq:
+        st.link_button("Participe da Enquete", "#votar") # Esse link faz a tela rolar para a área de voto
+
     st.markdown("---")
     
     st.subheader("📊 Placar Global")
@@ -106,6 +120,9 @@ if not st.session_state.user:
 else:
     st.success(f"Logado como: **{st.session_state.user}**")
     
+    # Âncora para o link da barra lateral
+    st.markdown('<div id="votar"></div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns([1, 1])
     
     # COLUNA 1: VOTAÇÃO
@@ -116,11 +133,9 @@ else:
             "Sonic CD (Sega CD)", "Nights into Dreams (Saturn)", "Metal Gear Solid (PS1)",
             "GoldenEye 007 (N64)", "Streets of Rage 2 (Mega Drive)"
         ]
-        # Adicionado 'key' para o selectbox
         voto_selecionado = st.selectbox("Escolha o jogo:", sorted(opcoes), key="select_voto")
         
         if st.button("Confirmar Voto"):
-            # Lógica de incremento
             votos_atuais = st.session_state.db.get("votos", {})
             votos_atuais[voto_selecionado] = votos_atuais.get(voto_selecionado, 0) + 1
             st.session_state.db["votos"] = votos_atuais
@@ -134,12 +149,10 @@ else:
     # COLUNA 2: BUSCA NA BIBLIOTECA
     with col2:
         st.header("📖 Busca Rápida")
-        # 'key' fundamental para o funcionamento da busca
         termo = st.text_input("Personagem ou Jogo:", key="input_busca").strip().lower()
         
         if termo:
             biblioteca = carregar_biblioteca_estatica()
-            # Filtro que olha nome e jogo
             resultados = [
                 p for p in biblioteca 
                 if termo in p['nome'].lower() or termo in p['jogo'].lower()
