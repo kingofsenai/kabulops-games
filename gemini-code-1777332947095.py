@@ -3,10 +3,10 @@ import time
 import json
 import os
 
-# 1. CONFIGURAÇÃO (Sempre o primeiro)
+# --- 1. CONFIGURAÇÃO (Sempre a primeira linha) ---
 st.set_page_config(page_title="Kabulops Games", page_icon="🎮", layout="centered")
 
-# 2. SISTEMA DE ARQUIVOS (Definições)
+# --- 2. SISTEMA DE DADOS ---
 DB_FILE = "database_kabulops.json"
 
 def carregar_dados():
@@ -23,40 +23,154 @@ def salvar_dados(dados):
     with open(DB_FILE, "w") as f:
         json.dump(dados_para_salvar, f, indent=4)
 
-# 3. LÓGICA DE RANKING (Defina a função ANTES de usar)
-def get_top_3():
-    # Se não houver votos ainda, retornamos lista vazia para evitar erro
-    if "votos" not in db or not db["votos"]:
-        return []
-    return sorted(db["votos"].items(), key=lambda x: x[1], reverse=True)[:3]
-
-# 4. INICIALIZAÇÃO DO BANCO (Onde o 'db' nasce)
 if "db" not in st.session_state:
     st.session_state.db = carregar_dados()
 
 db = st.session_state.db
 
-# 5. BIBLIOTECA (A lista gigante de 50 personagens que te passei)
+def get_top_3():
+    if not db["votos"]:
+        return []
+    return sorted(db["votos"].items(), key=lambda x: x[1], reverse=True)[:3]
+
+# --- 3. BIBLIOTECA (Os 50 personagens) ---
 @st.cache_data
 def carregar_biblioteca_estatica():
     return [
-        # ... (cole aqui os 50 personagens da lista anterior)
+        {"nome": "Suicune", "jogo": "Pokémon Crystal (GBC)", "papel": "Lendário", "golpe": "Aurora Beam / Hydro Pump"},
+        {"nome": "Eusine", "jogo": "Pokémon Crystal (GBC)", "papel": "Treinador", "golpe": "Dream Eater / Mean Look"},
+        {"nome": "Alis Landale", "jogo": "Phantasy Star (Master)", "papel": "Protagonista", "golpe": "Fire Spell / Light Sword"},
+        {"nome": "Myau", "jogo": "Phantasy Star (Master)", "papel": "Guardião", "golpe": "Cure Magic / Trap Disarm"},
+        {"nome": "Chrono", "jogo": "Chrono Trigger (SNES)", "papel": "Herói", "golpe": "Luminaire / Cyclone"},
+        {"nome": "Frog", "jogo": "Chrono Trigger (SNES)", "papel": "Cavaleiro", "golpe": "Water 2 / Leap Slash"},
+        {"nome": "Sonic", "jogo": "Sonic CD (Sega CD)", "papel": "Velocidade", "golpe": "Spin Dash / Super Peel Out"},
+        {"nome": "Metal Sonic", "jogo": "Sonic CD (Sega CD)", "papel": "Antagonista", "golpe": "Maximum Overdrive / V. Shield"},
+        {"nome": "Nights", "jogo": "Nights into Dreams (Saturn)", "papel": "Espírito", "golpe": "Paraloop / Drill Dash"},
+        {"nome": "Reala", "jogo": "Nights into Dreams (Saturn)", "papel": "Rival", "golpe": "Nightmaren Slash / Illusion"},
+        {"nome": "Solid Snake", "jogo": "Metal Gear Solid (PS1)", "papel": "Espião", "golpe": "CQC / Stinger Missile"},
+        {"nome": "Gray Fox", "jogo": "Metal Gear Solid (PS1)", "papel": "Ciborgue Ninja", "golpe": "Stealth Camouflage / Katana Slash"},
+        {"nome": "James Bond", "jogo": "GoldenEye 007 (N64)", "papel": "Agente", "golpe": "Remote Mines / Golden Gun"},
+        {"nome": "Alec Trevelyan", "jogo": "GoldenEye 007 (N64)", "papel": "Vilão", "golpe": "Dual RCP-90 / Tactical Strike"},
+        {"nome": "Axel Stone", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutador", "golpe": "Grand Upper / Dragon Wing"},
+        {"nome": "Blaze Fielding", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutadora", "golpe": "Kikousho / Somersault Kick"},
+        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Mascote", "golpe": "Thunderbolt / Quick Attack"},
+        {"nome": "Charizard", "jogo": "Pokémon Red/Blue", "papel": "Fogo/Voador", "golpe": "Flamethrower / Fire Blast"},
+        {"nome": "Blastoise", "jogo": "Pokémon Red/Blue", "papel": "Água", "golpe": "Hydro Pump / Skull Bash"},
+        {"nome": "Venusaur", "jogo": "Pokémon Red/Blue", "papel": "Planta/Veneno", "golpe": "Solar Beam / Sleep Powder"},
+        {"nome": "Mewtwo", "jogo": "Pokémon Red/Blue", "papel": "Psíquico", "golpe": "Psychic / Recover"},
+        {"nome": "Gengar", "jogo": "Pokémon Red/Blue", "papel": "Fantasma", "golpe": "Shadow Ball / Confuse Ray"},
+        {"nome": "Dragonite", "jogo": "Pokémon Red/Blue", "papel": "Dragão", "golpe": "Hyper Beam / Dragon Rage"},
+        {"nome": "Snorlax", "jogo": "Pokémon Red/Blue", "papel": "Tanque", "golpe": "Body Slam / Rest"},
+        {"nome": "Gyarados", "jogo": "Pokémon Red/Blue", "papel": "Água/Dragão", "golpe": "Dragon Dance / Hydro Pump"},
+        {"nome": "Arcanine", "jogo": "Pokémon Red/Blue", "papel": "Fogo", "golpe": "Extreme Speed / Flare Blitz"},
+        {"nome": "Alakazam", "jogo": "Pokémon Red/Blue", "papel": "Psíquico", "golpe": "Teleport / Psybeam"},
+        {"nome": "Kabutops", "jogo": "Pokémon Red/Blue", "papel": "Fóssil", "golpe": "Slash / Hydro Pump"},
+        {"nome": "Mario", "jogo": "Super Mario 64", "papel": "Herói", "golpe": "Triple Jump / Ground Pound"},
+        {"nome": "Link", "jogo": "Ocarina of Time", "papel": "Herói", "golpe": "Spin Attack / Din's Fire"},
+        {"nome": "Fox McCloud", "jogo": "Star Fox 64", "papel": "Líder", "golpe": "Barrel Roll / Nova Bomb"},
+        {"nome": "Donkey Kong", "jogo": "Donkey Kong 64", "papel": "Líder", "golpe": "Giant Punch / Coconut Cannon"},
+        {"nome": "Samus Aran", "jogo": "Super Metroid", "papel": "Caçadora", "golpe": "Screw Attack / Ice Beam"},
+        {"nome": "Yoshi", "jogo": "Yoshi's Island", "papel": "Aliado", "golpe": "Egg Throw / Flutter Jump"},
+        {"nome": "Kirby", "jogo": "Kirby Super Star", "papel": "Herói", "golpe": "Copy Ability / Star Spit"},
+        {"nome": "Captain Falcon", "jogo": "F-Zero X", "papel": "Piloto", "golpe": "Falcon Punch / Falcon Kick"},
+        {"nome": "Cloud Strife", "jogo": "Final Fantasy VII", "papel": "Mercenário", "golpe": "Omnislash / Cross-Slash"},
+        {"nome": "Sephiroth", "jogo": "Final Fantasy VII", "papel": "Antagonista", "golpe": "Supernova / Octaslash"},
+        {"nome": "Leon Kennedy", "jogo": "Resident Evil 2", "papel": "Policial", "golpe": "Shotgun Blast / Knife Strike"},
+        {"nome": "Crash Bandicoot", "jogo": "Crash Bandicoot", "papel": "Mascote", "golpe": "Spin Attack / Body Slam"},
+        {"nome": "Spyro", "jogo": "Spyro the Dragon", "papel": "Dragão", "golpe": "Flame Breath / Charge"},
+        {"nome": "Jin Kazama", "jogo": "Tekken 3", "papel": "Lutador", "golpe": "Laser Scraper / Electric Wind"},
+        {"nome": "Lara Croft", "jogo": "Tomb Raider", "papel": "Arqueóloga", "golpe": "Dual Pistols / Handstand"},
+        {"nome": "Alex Kidd", "jogo": "Alex Kidd in Miracle World", "papel": "Príncipe", "golpe": "Janken Punch / Peticopter"},
+        {"nome": "Mega Man X", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "X-Buster / Dash Attack"},
+        {"nome": "Zero", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "Z-Saber / Ryuenjin"},
+        {"nome": "Terry Bogard", "jogo": "Fatal Fury", "papel": "Lutador", "golpe": "Power Wave / Burn Knuckle"},
+        {"nome": "Mai Shiranui", "jogo": "King of Fighters", "papel": "Kunoichi", "golpe": "Kacho Sen / Ryuubi no Mai"},
+        {"nome": "Kyo Kusanagi", "jogo": "King of Fighters", "papel": "Lutador", "golpe": "Orochinagi / 100 Shiki"},
+        {"nome": "Shinobi", "jogo": "The Revenge of Shinobi", "papel": "Ninja", "golpe": "Shuriken Throw / Mijin Jutsu"}
     ]
 
-# 6. INTERFACE - BARRA LATERAL (Agora ela pode chamar o get_top_3 com segurança)
+# --- 4. BARRA LATERAL (Com as 5 Pokébolas) ---
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=50)
+    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=40)
     st.title("Kabulops Games")
     st.markdown("---")
     
+    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png", width=40)
+    st.markdown("#### **Pesquisa de Lives**")
+    
+    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", width=40)
+    st.markdown("#### **Seja um Kabuloso**")
+    
+    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", width=40)
+    st.markdown("#### **Biblioteca Retro**")
+    
+    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", width=40)
+    st.markdown("#### **Configurações**")
+    st.markdown("---")
+
     st.subheader("📊 Placar")
     st.metric("Players Online", db["total"])
     
-    ranking = get_top_3() # <--- AGORA O INIMIGO FOI DERROTADO AQUI
+    ranking = get_top_3()
     if ranking:
         medals = ["🥇", "🥈", "🥉"]
         for i, (jogo, qtd) in enumerate(ranking):
             st.markdown(f"{medals[i]} {jogo} ({qtd})")
 
-# 7. CONTEÚDO PRINCIPAL (O restante do código de Login e Enquete)
-# ...
+# --- 5. CONTEÚDO PRINCIPAL ---
+st.image("https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png")
+
+if 'user' not in st.session_state:
+    st.session_state.user = None
+
+# TELA DE LOGIN
+if not st.session_state.user:
+    nick = st.text_input("Digite seu Nick para entrar:", key="login_input")
+    if st.button("PRESS START"):
+        if nick:
+            st.session_state.user = nick
+            if nick not in db["usuarios"]:
+                db["total"] += 1
+                db["usuarios"].add(nick)
+                salvar_dados(db)
+            st.rerun()
+
+# TELA PÓS-LOGIN (O que o usuário vê logado)
+else:
+    st.write(f"### Bem-vindo, **{st.session_state.user}**!")
+    
+    # ENQUETE
+    st.header("🗳️ Qual Live você quer ver?")
+    opcoes_consoles = [
+        "Pokémon Crystal (GBC)", "Phantasy Star (Master)", "Chrono Trigger (SNES)", 
+        "Sonic CD (Sega CD)", "Nights into Dreams (Saturn)", "Metal Gear Solid (PS1)",
+        "GoldenEye 007 (N64)", "Streets of Rage 2 (Mega Drive)"
+    ]
+    voto = st.selectbox("Escolha seu jogo favorito:", sorted(opcoes_consoles))
+    
+    if st.button("Confirmar Voto"):
+        db["votos"][voto] = db["votos"].get(voto, 0) + 1
+        salvar_dados(db)
+        st.balloons()
+        st.success(f"Voto para {voto} registrado!")
+        time.sleep(1)
+        st.rerun()
+
+    st.markdown("---")
+
+    # BIBLIOTECA
+    st.header("📖 Biblioteca de Personagens")
+    termo = st.text_input("Busque personagens ou consoles:").lower()
+    
+    biblioteca = carregar_biblioteca_estatica()
+    if termo:
+        resultados = [p for p in biblioteca if termo in p['nome'].lower() or termo in p['jogo'].lower()]
+        if resultados:
+            for r in resultados:
+                with st.expander(f"🔹 {r['nome']} - {r['jogo']}"):
+                    st.write(f"**Papel:** {r['papel']}")
+                    st.write(f"**Golpes:** {r['golpe']}")
+        else:
+            st.warning("Nenhum personagem encontrado com esse termo.")
+    else:
+        st.info("Digite o nome de um personagem ou console para pesquisar na biblioteca.")
