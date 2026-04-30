@@ -37,46 +37,16 @@ def get_top_3():
 @st.cache_data
 def carregar_biblioteca_estatica():
     return [
-        # --- BIBLIOTECA DE PERSONAGENS (COMPLETA - 62 REGISTROS) ---
-@st.cache_data
+# --- 3. BIBLIOTECA (Os 62 personagens) ---
 @st.cache_data
 def carregar_biblioteca_estatica():
     return [
         {"nome": "Suicune", "jogo": "Pokémon Crystal (GBC)", "papel": "Lendário", "golpe": "Aurora Beam / Hydro Pump"},
         {"nome": "Eusine", "jogo": "Pokémon Crystal (GBC)", "papel": "Treinador", "golpe": "Dream Eater / Mean Look"},
-        # ... (todos os outros personagens ficam aqui no meio) ...
+        # ... (TODOS OS OUTROS 58 PERSONAGENS FICAM AQUI) ...
         {"nome": "Kyo Kusanagi", "jogo": "King of Fighters", "papel": "Lutador", "golpe": "Orochinagi / 100 Shiki"},
         {"nome": "Shinobi", "jogo": "The Revenge of Shinobi", "papel": "Ninja", "golpe": "Shuriken Throw / Mijin Jutsu"}
-    ] # <--- ESTE COLCHETE É O QUE ESTÁ FALTANDO!
-
-# --- 4. BARRA LATERAL (Com as 5 Pokébolas) ---
-with st.sidebar:
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=40)
-    st.title("Kabulops Games")
-    st.markdown("---")
-    
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png", width=40)
-    st.markdown("#### **Pesquisa de Lives**")
-    
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", width=40)
-    st.markdown("#### **Seja um Kabuloso**")
-    
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", width=40)
-    st.markdown("#### **Biblioteca Retro**")
-    
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", width=40)
-    st.markdown("#### **Configurações**")
-    st.markdown("---")
-
-    st.subheader("📊 Placar")
-    st.metric("Players Online", db["total"])
-    
-    ranking = get_top_3()
-    if ranking:
-        medals = ["🥇", "🥈", "🥉"]
-        for i, (jogo, qtd) in enumerate(ranking):
-            st.markdown(f"{medals[i]} {jogo} ({qtd})")
-
+    ]
 # --- 5. CONTEÚDO PRINCIPAL ---
 st.image("https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png")
 
