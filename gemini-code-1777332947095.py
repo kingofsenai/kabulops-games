@@ -35,35 +35,77 @@ if "db" not in st.session_state:
 
 db = st.session_state.db
 
-# --- BIBLIOTECA DE PERSONAGENS (EXPANDIDA) ---
+# --- BIBLIOTECA DE PERSONAGENS (EXPANDIDA - 50 PERSONAGENS) ---
 @st.cache_data
 def carregar_biblioteca_estatica():
     return [
-        # ... (seu conteúdo da biblioteca permanece exatamente o mesmo aqui)
-        {"nome": "Suicune", "jogo": "Pokémon Crystal", "papel": "Lendário", "golpe": "Aurora Beam"},
-        {"nome": "Link", "jogo": "Zelda: Oracle of Ages", "papel": "Herói", "golpe": "Harp of Ages"},
-        {"nome": "Shantae", "jogo": "Shantae", "papel": "Meio-Gênio", "golpe": "Dança da Transformação"},
-        {"nome": "Alis Landale", "jogo": "Phantasy Star", "papel": "Protagonista", "golpe": "Espada de Luz"},
-        {"nome": "Alex Kidd", "jogo": "Alex Kidd", "papel": "Mascote", "golpe": "Soco Janken"},
-        {"nome": "Chrono", "jogo": "Chrono Trigger", "papel": "Herói", "golpe": "Luminaire"},
-        {"nome": "Mega Man X", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "X-Buster"},
-        {"nome": "Donkey Kong", "jogo": "Donkey Kong Country", "papel": "Líder", "golpe": "Ground Pound"},
-        {"nome": "Sonic", "jogo": "Sonic the Hedgehog", "papel": "Velocidade", "golpe": "Spin Dash"},
-        {"nome": "Axel Stone", "jogo": "Streets of Rage", "papel": "Lutador", "golpe": "Grand Upper"},
-        {"nome": "Lute", "jogo": "Lunar: Silver Star", "papel": "Bardo", "golpe": "Canção de Cura"},
-        {"nome": "Nights", "jogo": "Nights into Dreams", "papel": "Espírito", "golpe": "Paraloop"},
-        {"nome": "Solid Snake", "jogo": "Metal Gear Solid", "papel": "Espião", "golpe": "Stealth Camouflage"},
-        {"nome": "Cloud Strife", "jogo": "Final Fantasy VII", "papel": "Mercenário", "golpe": "Omnislash"},
-        {"nome": "Leon Kennedy", "jogo": "Resident Evil 2", "papel": "Policial", "golpe": "Tiro Preciso"},
-        {"nome": "Mario", "jogo": "Super Mario 64", "papel": "Herói", "golpe": "Triplo Pulo"},
-        {"nome": "James Bond", "jogo": "GoldenEye 007", "papel": "Agente", "golpe": "PP7 Silenciada"},
-        {"nome": "Banjo", "jogo": "Banjo-Kazooie", "papel": "Urso", "golpe": "Beak Buster"}
+        # --- PERSONAGENS DOS JOGOS DA ENQUETE (02 POR JOGO) ---
+        {"nome": "Suicune", "jogo": "Pokémon Crystal (GBC)", "papel": "Lendário", "golpe": "Aurora Beam / Hydro Pump"},
+        {"nome": "Eusine", "jogo": "Pokémon Crystal (GBC)", "papel": "Treinador", "golpe": "Dream Eater / Mean Look"},
+        
+        {"nome": "Alis Landale", "jogo": "Phantasy Star (Master)", "papel": "Protagonista", "golpe": "Fire Spell / Light Sword"},
+        {"nome": "Myau", "jogo": "Phantasy Star (Master)", "papel": "Guardião", "golpe": "Cure Magic / Trap Disarm"},
+        
+        {"nome": "Chrono", "jogo": "Chrono Trigger (SNES)", "papel": "Herói", "golpe": "Luminaire / Cyclone"},
+        {"nome": "Frog", "jogo": "Chrono Trigger (SNES)", "papel": "Cavaleiro", "golpe": "Water 2 / Leap Slash"},
+        
+        {"nome": "Sonic", "jogo": "Sonic CD (Sega CD)", "papel": "Velocidade", "golpe": "Spin Dash / Super Peel Out"},
+        {"nome": "Metal Sonic", "jogo": "Sonic CD (Sega CD)", "papel": "Antagonista", "golpe": "Maximum Overdrive / V. Shield"},
+        
+        {"nome": "Nights", "jogo": "Nights into Dreams (Saturn)", "papel": "Espírito", "golpe": "Paraloop / Drill Dash"},
+        {"nome": "Reala", "jogo": "Nights into Dreams (Saturn)", "papel": "Rival", "golpe": "Nightmaren Slash / Illusion"},
+        
+        {"nome": "Solid Snake", "jogo": "Metal Gear Solid (PS1)", "papel": "Espião", "golpe": "CQC / Stinger Missile"},
+        {"nome": "Gray Fox", "jogo": "Metal Gear Solid (PS1)", "papel": "Ciborgue Ninja", "golpe": "Stealth Camouflage / Katana Slash"},
+        
+        {"nome": "James Bond", "jogo": "GoldenEye 007 (N64)", "papel": "Agente", "golpe": "Remote Mines / Golden Gun"},
+        {"nome": "Alec Trevelyan", "jogo": "GoldenEye 007 (N64)", "papel": "Vilão", "golpe": "Dual RCP-90 / Tactical Strike"},
+        
+        {"nome": "Axel Stone", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutador", "golpe": "Grand Upper / Dragon Wing"},
+        {"nome": "Blaze Fielding", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutadora", "golpe": "Kikousho / Somersault Kick"},
+
+        # --- POKÉMON PRIMEIRA GERAÇÃO (RED/BLUE/YELLOW) ---
+        {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Mascote", "golpe": "Thunderbolt / Quick Attack"},
+        {"nome": "Charizard", "jogo": "Pokémon Red/Blue", "papel": "Fogo/Voador", "golpe": "Flamethrower / Fire Blast"},
+        {"nome": "Blastoise", "jogo": "Pokémon Red/Blue", "papel": "Água", "golpe": "Hydro Pump / Skull Bash"},
+        {"nome": "Venusaur", "jogo": "Pokémon Red/Blue", "papel": "Planta/Veneno", "golpe": "Solar Beam / Sleep Powder"},
+        {"nome": "Mewtwo", "jogo": "Pokémon Red/Blue", "papel": "Psíquico", "golpe": "Psychic / Recover"},
+        {"nome": "Gengar", "jogo": "Pokémon Red/Blue", "papel": "Fantasma", "golpe": "Shadow Ball / Confuse Ray"},
+        {"nome": "Dragonite", "jogo": "Pokémon Red/Blue", "papel": "Dragão", "golpe": "Hyper Beam / Dragon Rage"},
+        {"nome": "Snorlax", "jogo": "Pokémon Red/Blue", "papel": "Tanque", "golpe": "Body Slam / Rest"},
+        {"nome": "Gyarados", "jogo": "Pokémon Red/Blue", "papel": "Água/Dragão", "golpe": "Dragon Dance / Hydro Pump"},
+        {"nome": "Arcanine", "jogo": "Pokémon Red/Blue", "papel": "Fogo", "golpe": "Extreme Speed / Flare Blitz"},
+        {"nome": "Alakazam", "jogo": "Pokémon Red/Blue", "papel": "Psíquico", "golpe": "Teleport / Psybeam"},
+        {"nome": "Kabutops", "jogo": "Pokémon Red/Blue", "papel": "Fóssil", "golpe": "Slash / Hydro Pump"},
+
+        # --- CLÁSSICOS NINTENDO 64 / SNES ---
+        {"nome": "Mario", "jogo": "Super Mario 64", "papel": "Herói", "golpe": "Triple Jump / Ground Pound"},
+        {"nome": "Link", "jogo": "Ocarina of Time", "papel": "Herói do Tempo", "golpe": "Spin Attack / Din's Fire"},
+        {"nome": "Fox McCloud", "jogo": "Star Fox 64", "papel": "Líder", "golpe": "Barrel Roll / Nova Bomb"},
+        {"nome": "Donkey Kong", "jogo": "Donkey Kong 64", "papel": "Líder", "golpe": "Giant Punch / Coconut Cannon"},
+        {"nome": "Samus Aran", "jogo": "Super Metroid", "papel": "Caçadora", "golpe": "Screw Attack / Ice Beam"},
+        {"nome": "Yoshi", "jogo": "Yoshi's Island", "papel": "Aliado", "golpe": "Egg Throw / Flutter Jump"},
+        {"nome": "Kirby", "jogo": "Kirby Super Star", "papel": "Herói", "golpe": "Copy Ability / Star Spit"},
+        {"nome": "Captain Falcon", "jogo": "F-Zero X", "papel": "Piloto", "golpe": "Falcon Punch / Falcon Kick"},
+
+        # --- CLÁSSICOS PLAYSTATION 1 ---
+        {"nome": "Cloud Strife", "jogo": "Final Fantasy VII", "papel": "Mercenário", "golpe": "Omnislash / Cross-Slash"},
+        {"nome": "Sephiroth", "jogo": "Final Fantasy VII", "papel": "Antagonista", "golpe": "Supernova / Octaslash"},
+        {"nome": "Leon Kennedy", "jogo": "Resident Evil 2", "papel": "Policial", "golpe": "Shotgun Blast / Knife Strike"},
+        {"nome": "Crash Bandicoot", "jogo": "Crash Bandicoot", "papel": "Mascote", "golpe": "Spin Attack / Body Slam"},
+        {"nome": "Spyro", "jogo": "Spyro the Dragon", "papel": "Dragão", "golpe": "Flame Breath / Charge"},
+        {"nome": "Jin Kazama", "jogo": "Tekken 3", "papel": "Lutador", "golpe": "Laser Scraper / Electric Wind"},
+        {"nome": "Lara Croft", "jogo": "Tomb Raider", "papel": "Arqueóloga", "golpe": "Dual Pistols / Handstand"},
+
+        # --- RETRÔ ARCADE / MASTER / MEGA ---
+        {"nome": "Alex Kidd", "jogo": "Alex Kidd in Miracle World", "papel": "Príncipe", "golpe": "Janken Punch / Peticopter"},
+        {"nome": "Mega Man X", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "X-Buster / Dash Attack"},
+        {"nome": "Zero", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "Z-Saber / Ryuenjin"},
+        {"nome": "Terry Bogard", "jogo": "Fatal Fury / Neo Geo", "papel": "Lutador", "golpe": "Power Wave / Burn Knuckle"},
+        {"nome": "Mai Shiranui", "jogo": "King of Fighters", "papel": "Kunoichi", "golpe": "Kacho Sen / Ryuubi no Mai"},
+        {"nome": "Kyo Kusanagi", "jogo": "King of Fighters", "papel": "Lutador", "golpe": "Orochinagi / 100 Shiki: Oniyaki"},
+        {"nome": "Shinobi (Joe Musashi)", "jogo": "The Revenge of Shinobi", "papel": "Ninja", "golpe": "Shuriken Throw / Mijin Jutsu"}
     ]
-
-# --- LÓGICA DE RANKING ---
-def get_top_3():
-    return sorted(db["votos"].items(), key=lambda x: x[1], reverse=True)[:3]
-
 # --- BARRA LATERAL ---
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=50)
