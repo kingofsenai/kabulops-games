@@ -37,6 +37,11 @@ def get_top_3():
 @st.cache_data
 def carregar_biblioteca_estatica():
     return [
+        # --- BIBLIOTECA DE PERSONAGENS (COMPLETA - 62 REGISTROS) ---
+@st.cache_data
+def carregar_biblioteca_estatica():
+    return [
+        # --- JOGOS DA ENQUETE (2 POR JOGO) ---
         {"nome": "Suicune", "jogo": "Pokémon Crystal (GBC)", "papel": "Lendário", "golpe": "Aurora Beam / Hydro Pump"},
         {"nome": "Eusine", "jogo": "Pokémon Crystal (GBC)", "papel": "Treinador", "golpe": "Dream Eater / Mean Look"},
         {"nome": "Alis Landale", "jogo": "Phantasy Star (Master)", "papel": "Protagonista", "golpe": "Fire Spell / Light Sword"},
@@ -53,6 +58,27 @@ def carregar_biblioteca_estatica():
         {"nome": "Alec Trevelyan", "jogo": "GoldenEye 007 (N64)", "papel": "Vilão", "golpe": "Dual RCP-90 / Tactical Strike"},
         {"nome": "Axel Stone", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutador", "golpe": "Grand Upper / Dragon Wing"},
         {"nome": "Blaze Fielding", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutadora", "golpe": "Kikousho / Somersault Kick"},
+
+        # --- NOVOS: STREET FIGHTER II ---
+        {"nome": "Ryu", "jogo": "Street Fighter II", "papel": "Lutador", "golpe": "Hadouken / Shoryuken"},
+        {"nome": "Chun-Li", "jogo": "Street Fighter II", "papel": "Interpol", "golpe": "Hyakuretsu Kyaku / Spinning Bird Kick"},
+        {"nome": "Guile", "jogo": "Street Fighter II", "papel": "Major", "golpe": "Sonic Boom / Flash Kick"},
+        {"nome": "M. Bison", "jogo": "Street Fighter II", "papel": "Vilão", "golpe": "Psycho Crusher / Scissor Kick"},
+
+        # --- NOVOS: MORTAL KOMBAT II ---
+        {"nome": "Liu Kang", "jogo": "Mortal Kombat II", "papel": "Campeão", "golpe": "Dragon Fireball / Bicycle Kick"},
+        {"nome": "Scorpion", "jogo": "Mortal Kombat II", "papel": "Espectro", "golpe": "Spear / Teleport Punch"},
+        {"nome": "Sub-Zero", "jogo": "Mortal Kombat II", "papel": "Ninja", "golpe": "Ice Blast / Slide Attack"},
+        {"nome": "Kitana", "jogo": "Mortal Kombat II", "papel": "Princesa", "golpe": "Fan Toss / Square Wave Punch"},
+
+        # --- NOVOS: CADILLACS AND DINOSAURS ---
+        {"nome": "Jack Tenrec", "jogo": "Cadillacs and Dinosaurs", "papel": "Mecânico", "golpe": "Dashing Uppercut / Slide Kick"},
+        {"nome": "Hannah Dundee", "jogo": "Cadillacs and Dinosaurs", "papel": "Diplomata", "golpe": "Spinning Kick / Knife Mastery"},
+        {"nome": "Mustapha Cairo", "jogo": "Cadillacs and Dinosaurs", "papel": "Engenheiro", "golpe": "Flying Kick / Tornado Kick"},
+        {"nome": "Mess O'Bradovich", "jogo": "Cadillacs and Dinosaurs", "papel": "Gigante", "golpe": "Power Slam / Flying Body Press"},
+
+        # --- POKÉMON (1ª GERAÇÃO) ---
+        {"nome": "Kabutops", "jogo": "Pokémon Yellow/Red/Blue", "papel": "Fóssil", "golpe": "Slash / Hydro Pump"},
         {"nome": "Pikachu", "jogo": "Pokémon Yellow", "papel": "Mascote", "golpe": "Thunderbolt / Quick Attack"},
         {"nome": "Charizard", "jogo": "Pokémon Red/Blue", "papel": "Fogo/Voador", "golpe": "Flamethrower / Fire Blast"},
         {"nome": "Blastoise", "jogo": "Pokémon Red/Blue", "papel": "Água", "golpe": "Hydro Pump / Skull Bash"},
@@ -64,7 +90,8 @@ def carregar_biblioteca_estatica():
         {"nome": "Gyarados", "jogo": "Pokémon Red/Blue", "papel": "Água/Dragão", "golpe": "Dragon Dance / Hydro Pump"},
         {"nome": "Arcanine", "jogo": "Pokémon Red/Blue", "papel": "Fogo", "golpe": "Extreme Speed / Flare Blitz"},
         {"nome": "Alakazam", "jogo": "Pokémon Red/Blue", "papel": "Psíquico", "golpe": "Teleport / Psybeam"},
-        {"nome": "Kabutops", "jogo": "Pokémon Red/Blue", "papel": "Fóssil", "golpe": "Slash / Hydro Pump"},
+
+        # --- CLÁSSICOS NINTENDO (64/SNES) ---
         {"nome": "Mario", "jogo": "Super Mario 64", "papel": "Herói", "golpe": "Triple Jump / Ground Pound"},
         {"nome": "Link", "jogo": "Ocarina of Time", "papel": "Herói", "golpe": "Spin Attack / Din's Fire"},
         {"nome": "Fox McCloud", "jogo": "Star Fox 64", "papel": "Líder", "golpe": "Barrel Roll / Nova Bomb"},
@@ -73,6 +100,8 @@ def carregar_biblioteca_estatica():
         {"nome": "Yoshi", "jogo": "Yoshi's Island", "papel": "Aliado", "golpe": "Egg Throw / Flutter Jump"},
         {"nome": "Kirby", "jogo": "Kirby Super Star", "papel": "Herói", "golpe": "Copy Ability / Star Spit"},
         {"nome": "Captain Falcon", "jogo": "F-Zero X", "papel": "Piloto", "golpe": "Falcon Punch / Falcon Kick"},
+
+        # --- CLÁSSICOS PLAYSTATION 1 ---
         {"nome": "Cloud Strife", "jogo": "Final Fantasy VII", "papel": "Mercenário", "golpe": "Omnislash / Cross-Slash"},
         {"nome": "Sephiroth", "jogo": "Final Fantasy VII", "papel": "Antagonista", "golpe": "Supernova / Octaslash"},
         {"nome": "Leon Kennedy", "jogo": "Resident Evil 2", "papel": "Policial", "golpe": "Shotgun Blast / Knife Strike"},
@@ -80,6 +109,8 @@ def carregar_biblioteca_estatica():
         {"nome": "Spyro", "jogo": "Spyro the Dragon", "papel": "Dragão", "golpe": "Flame Breath / Charge"},
         {"nome": "Jin Kazama", "jogo": "Tekken 3", "papel": "Lutador", "golpe": "Laser Scraper / Electric Wind"},
         {"nome": "Lara Croft", "jogo": "Tomb Raider", "papel": "Arqueóloga", "golpe": "Dual Pistols / Handstand"},
+
+        # --- RETRÔ ARCADE / MASTER / MEGA ---
         {"nome": "Alex Kidd", "jogo": "Alex Kidd in Miracle World", "papel": "Príncipe", "golpe": "Janken Punch / Peticopter"},
         {"nome": "Mega Man X", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "X-Buster / Dash Attack"},
         {"nome": "Zero", "jogo": "Mega Man X", "papel": "Hunter", "golpe": "Z-Saber / Ryuenjin"},
