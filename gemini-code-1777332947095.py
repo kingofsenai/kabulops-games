@@ -67,8 +67,13 @@ def carregar_biblioteca_estatica():
 
 # --- 4. SIDEBAR ---
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=50)
-    st.title("Kabulops Games")
+    # Centralização da Imagem e Título usando colunas como espaçadores
+    col_space1, col_img, col_space2 = st.columns([1, 3, 1])
+    with col_img:
+        # Usei a URL direta da imagem que você subiu para facilitar
+        st.image("https://files.oaiusercontent.com/file-X906W0iQdOofDAs7XpEn8m7T?se=2024-10-24T14%3A01%3A18Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D17d3d294-874f-4d33-bc07-bc97e721516e.webp&sig=yT8Zk9A9Taqx8Oa%2Bv4XW/8w7v2O%2B08U5zI4P/IivY0E%3D")
+    
+    st.markdown("<h1 style='text-align: center;'>Kabulops Games</h1>", unsafe_allow_html=True)
     st.markdown("---")
     
     # Pokebola 1: Inscreva-se
@@ -118,12 +123,10 @@ if not st.session_state.user:
 else:
     st.success(f"Logado como: **{st.session_state.user}**")
     
-    # Âncora para o link da barra lateral
     st.markdown('<div id="votar"></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([1, 1])
     
-    # COLUNA 1: VOTAÇÃO
     with col1:
         st.header("🗳️ Próxima Live")
         opcoes = [
@@ -144,7 +147,6 @@ else:
             time.sleep(1)
             st.rerun()
 
-    # COLUNA 2: BUSCA NA BIBLIOTECA
     with col2:
         st.header("📖 Busca Rápida")
         termo = st.text_input("Personagem ou Jogo:", key="input_busca").strip().lower()
