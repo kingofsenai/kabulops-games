@@ -65,27 +65,25 @@ def carregar_biblioteca_estatica():
         {"nome": "Terry Bogard", "jogo": "Fatal Fury", "papel": "Lutador", "golpe": "Power Wave / Burn Knuckle"},
     ]
 
-# --- 4. SIDEBAR (PLACAR E POKEBOLAS) ---
+# --- 4. SIDEBAR ---
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=50)
     st.title("Kabulops Games")
-    
-    # --- AS POKEBOLAS RECUPERADAS ---
-    st.markdown("### 🔴 Pokebolas Perdidas")
+    st.markdown("---")
     
     # Pokebola 1: Inscreva-se
     col_insc, text_insc = st.columns([1, 4])
     with col_insc:
-        st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", width=30)
+        st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", width=25)
     with text_insc:
-        st.link_button("Inscreva-se no Canal", "https://www.youtube.com/@kabulops") # Coloque o link real aqui
+        st.link_button("Inscreva-se no Canal", "https://www.youtube.com/@kabulops")
 
     # Pokebola 2: Enquete
     col_enq, text_enq = st.columns([1, 4])
     with col_enq:
-        st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", width=30)
+        st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", width=25)
     with text_enq:
-        st.link_button("Participe da Enquete", "#votar") # Esse link faz a tela rolar para a área de voto
+        st.link_button("Participe da Enquete", "#votar")
 
     st.markdown("---")
     
