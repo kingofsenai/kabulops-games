@@ -3,16 +3,14 @@ import time
 import json
 import os
 
-# --- 1. CONFIGURAÇÃO ---
+# --- 1. CONFIGURAÇÃO DA PÁGINA ---
 st.set_page_config(
     page_title="Kabulops Games", 
     page_icon="🎮", 
     layout="centered"
 )
 
-# --- 2. SISTEMA DE PERSISTÊNCIA ROBUSTO ---
-# Nota: Se estiver usando o Streamlit Cloud, arquivos .json locais somem no reboot.
-# Para persistência REAL, o ideal seria usar st.connection("tidy") ou Firebase.
+# --- 2. SISTEMA DE PERSISTÊNCIA ---
 DB_FILE = "database_kabulops.json"
 
 def carregar_dados():
@@ -20,8 +18,11 @@ def carregar_dados():
         try:
             with open(DB_FILE, "r") as f:
                 data = json.load(f)
-                # Garante que 'usuarios' seja um set para evitar duplicatas
+                # Garante que 'usuarios' seja um set para evitar duplicatas na memória
                 data["usuarios"] = set(data.get("usuarios", []))
+                # Garante que 'votos' exista
+                if "votos" not in data:
+                    data["votos"] = {}
                 return data
         except:
             pass
@@ -33,7 +34,7 @@ def salvar_dados(dados):
     with open(DB_FILE, "w") as f:
         json.dump(dados_para_salvar, f, indent=4)
 
-# Inicialização única para evitar resets durante a sessão
+# Inicialização do estado da sessão
 if "db" not in st.session_state:
     st.session_state.db = carregar_dados()
 
@@ -41,6 +42,7 @@ def get_top_3():
     db = st.session_state.db
     if not db["votos"]:
         return []
+    # Ordena os jogos por número de votos
     return sorted(db["votos"].items(), key=lambda x: x[1], reverse=True)[:3]
 
 # --- 3. BIBLIOTECA DE PERSONAGENS ---
@@ -65,10 +67,9 @@ def carregar_biblioteca_estatica():
         {"nome": "Blaze Fielding", "jogo": "Streets of Rage 2 (Mega Drive)", "papel": "Lutadora", "golpe": "Kikousho / Somersault Kick"},
         {"nome": "Kabutops", "jogo": "Pokémon Red/Blue/Yellow", "papel": "Fóssil", "golpe": "Slash / Hydro Pump"},
         {"nome": "Terry Bogard", "jogo": "Fatal Fury", "papel": "Lutador", "golpe": "Power Wave / Burn Knuckle"},
-        # ... (Mantive a lógica dos 62 registros para não poluir o código aqui)
     ]
 
-# --- 4. SIDEBAR ---
+# --- 4. SIDEBAR (PLACAR) ---
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png", width=40)
     st.title("Kabulops Games")
@@ -82,8 +83,10 @@ with st.sidebar:
         medals = ["🥇", "🥈", "🥉"]
         for i, (jogo, qtd) in enumerate(ranking):
             st.write(f"{medals[i]} {jogo}: **{qtd} votos**")
+    else:
+        st.write("Nenhum voto ainda!")
 
-# --- 5. CONTEÚDO PRINCIPAL ---
+# --- 5. ÁREA DE LOGIN / CONTEÚDO ---
 st.image("https://raw.githubusercontent.com/kingofsenai/kabulops-games/main/3a705bfa-a5e1-46fe-95c06-bdc5b1d9ac81.png")
 
 if 'user' not in st.session_state:
@@ -105,6 +108,7 @@ else:
     
     col1, col2 = st.columns([1, 1])
     
+    # COLUNA 1: VOTAÇÃO
     with col1:
         st.header("🗳️ Próxima Live")
         opcoes = [
@@ -112,18 +116,43 @@ else:
             "Sonic CD (Sega CD)", "Nights into Dreams (Saturn)", "Metal Gear Solid (PS1)",
             "GoldenEye 007 (N64)", "Streets of Rage 2 (Mega Drive)"
         ]
-        voto = st.selectbox("Vote no jogo:", sorted(opcoes))
+        # Adicionado 'key' para o selectbox
+        voto_selecionado = st.selectbox("Escolha o jogo:", sorted(opcoes), key="select_voto")
+        
         if st.button("Confirmar Voto"):
-            st.session_state.db["votos"][voto] = st.session_state.db["votos"].get(voto, 0) + 1
+            # Lógica de incremento
+            votos_atuais = st.session_state.db.get("votos", {})
+            votos_atuais[voto_selecionado] = votos_atuais.get(voto_selecionado, 0) + 1
+            st.session_state.db["votos"] = votos_atuais
+            
             salvar_dados(st.session_state.db)
             st.balloons()
+            st.toast(f"Voto em {voto_selecionado} registrado!", icon="✅")
+            time.sleep(1)
             st.rerun()
 
+    # COLUNA 2: BUSCA NA BIBLIOTECA
     with col2:
         st.header("📖 Busca Rápida")
-        termo = st.text_input("Personagem/Console:").lower()
+        # 'key' fundamental para o funcionamento da busca
+        termo = st.text_input("Personagem ou Jogo:", key="input_busca").strip().lower()
+        
         if termo:
             biblioteca = carregar_biblioteca_estatica()
-            resultados = [p for p in biblioteca if termo in p['nome'].lower() or termo in p['jogo'].lower()]
-            for r in resultados[:5]: # Mostra os 5 primeiros
-                st.write(f"**{r['nome']}** ({r['jogo']})")
+            # Filtro que olha nome e jogo
+            resultados = [
+                p for p in biblioteca 
+                if termo in p['nome'].lower() or termo in p['jogo'].lower()
+            ]
+            
+            if resultados:
+                st.write(f"🔍 Resultados ({len(resultados)}):")
+                for r in resultados[:5]:
+                    with st.expander(f"✨ {r['nome']}"):
+                        st.caption(f"Jogo: {r['jogo']}")
+                        st.write(f"**Função:** {r['papel']}")
+                        st.write(f"**Golpes:** {r['golpe']}")
+            else:
+                st.warning("Nada encontrado!")
+        else:
+            st.caption("Digite para pesquisar...")
